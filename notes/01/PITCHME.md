@@ -24,9 +24,8 @@ to learn without being programmed.
 ---
 ## Types of Learning Algorithms
 
-### Supervised
-
-### Unsuppervised
+* Supervised
+* Unsuppervised
 
 +++
 
