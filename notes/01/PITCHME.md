@@ -1,15 +1,14 @@
 # Machine Learning 101
 ---
-# Motivation
+## Motivation
 
-Money?
-
++++
 * https://www.kaggle.com/competitions
 * https://www.kaggle.com/c/web-traffic-time-series-forecasting
 * https://www.kaggle.com/c/msk-redefining-cancer-treatment
 
 ---
-# What is Machine Learning?
+## What is Machine Learning?
 
 +++
 
@@ -23,11 +22,11 @@ to learn without being programmed.
 * Tom Mitchell (1998): A program is said to learn from experience E
 
 ---
-# Types of Learning Algorithms
+## Types of Learning Algorithms
 
-## Supervised
+### Supervised
 
-## Unsuppervised
+### Unsuppervised
 
 +++
 
