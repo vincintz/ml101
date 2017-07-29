@@ -9,17 +9,28 @@ Money?
 * https://www.kaggle.com/c/msk-redefining-cancer-treatment
 
 ---
-# Machine Learning Definition
+# Definition
 
-* Arthur Samuel (1959): Field of study that gives computers the abbility to learn without being programmed.
+* Arthur Samuel (1959): Field of study that gives computers the abbility 
+to learn without being programmed.
 
 +++
+# Definition
 
 * Tom Mitchell (1998): A program is said to learn from experience E
 
-# Machine Learning Algorithms
+---
+# Types of Learning Algorithms
 
 ## Supervised
+
+## Unsuppervised
+
++++
+
+## Supervised
+
++++
 
 ## Unsuppervised
 
