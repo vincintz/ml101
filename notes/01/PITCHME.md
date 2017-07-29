@@ -53,7 +53,7 @@ to learn without being programmed.
 
 * Arthur Samuel wrote a checkers program that "played thousands of games against itself" to improve.
 
-![Image](notes/assets/md/assets/International_draughts.jpg)
+![Image](notes/assets/International_draughts.jpg)
 
 ---
 
@@ -88,11 +88,11 @@ to learn without being programmed.
 
 **Typical Programs**
 
-![Image](notes/assets/md/assets/typical-app.png)
+![Image](notes/assets/typical-app.png)
 
 **Machine Learning**
 
-![Image](notes/assets/md/assets/ml-app.png)
+![Image](notes/assets/ml-app.png)
 
 ---
 
