@@ -199,8 +199,8 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 ---
 ## References
 
-[1] https://www.kaggle.com/
-[2] https://www.coursera.org/learn/machine-learning/
-[3] http://www.seas.upenn.edu/~cis519/
-[4] https://en.wikipedia.org/wiki/Machine_learning
-[5] https://www.ibm.com/developerworks/community/blogs/jfp/entry/The_Machine_Learning_Workflow?lang=en
+* [1] https://www.kaggle.com/
+* [2] https://www.coursera.org/learn/machine-learning/
+* [3] http://www.seas.upenn.edu/~cis519/
+* [4] https://en.wikipedia.org/wiki/Machine_learning
+* [5] https://www.ibm.com/developerworks/community/blogs/jfp/entry/The_Machine_Learning_Workflow?lang=en
