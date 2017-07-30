@@ -98,8 +98,6 @@ to learn without being programmed.
 
 ## Machine Learning Workflow
 
-+++
-
 ![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/mlworkflowperception.png)
 
 Data > ??? > ML Algorithm > ??? > $$$ [4]
@@ -118,7 +116,10 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 
 * https://www.kaggle.com/c/digit-recognizer
 
+* In this competition, your goal is to correctly identify digits from a dataset of tens of thousands of handwritten images.
+
 ![Kaggle Image](https://kaggle2.blob.core.windows.net/competitions/kaggle/3004/logos/front_page.png)
+
 
 +++
 
@@ -126,13 +127,25 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 
 * https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 
+* With 79 explanatory variables describing (almost) every aspect of residential homes in Ames, Iowa, this competition challenges you to predict the final price of each home.
+
 ![Kaggle Image](https://kaggle2.blob.core.windows.net/competitions/kaggle/5407/media/housesbanner.png)
 
 +++
 
-**Spam Detection**
+**Fake News Detection**
 
-* https://www.kaggle.com/karthickveerakumar/spam-filter
+* https://www.kaggle.com/mrisdal/fake-news
+
+* The latest hot topic in the news is fake news and many are wondering what data scientists can do to detect it and stymie its viral spread. T
+
++++
+
+**Climate Analysis**
+
+* https://www.kaggle.com/cwiloc/climate-data-from-ocean-ships
+
+* Sample data from 18th to early 19th century sailors. Find any sort of correlation.
 
 ---
 
@@ -147,6 +160,8 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 **Supervised learning** [5]
 
 * The computer is presented with example inputs and their desired outputs, given by a "teacher", and the goal is to learn a general rule that maps inputs to outputs.
+
++++
 
 **Unsupervised learning** [5]
 
@@ -163,7 +178,7 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 
 ## What's next?
 
-1. Compare several machine learning libraries. Show the similarities between them. Usual pattern is:
+* Compare several machine learning libraries. Show the similarities between them. Usual pattern is:
   * Create and configure algorithm
   * Read training data
   * Run algorithm to generate a model
@@ -171,14 +186,14 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 
 +++
 
-2. Look into how some of the algorithm works
+* Look into how some of the algorithm works
   * Decision tree
   * Neural Net
   * ???
 
 +++
 
-3. Sample system : end-to-end workflow
+* Sample system : end-to-end workflow
   * Optical character recognition (?)
 
 ---
