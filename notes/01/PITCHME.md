@@ -11,7 +11,7 @@
 
 +++
 
-* Actual Competition
+* This is actually a public competition in kaggle
 
 * https://www.kaggle.com/c/GiveMeSomeCredit
 
@@ -51,7 +51,7 @@ to learn without being programmed.
 
 +++
 
-* Arthur Samuel wrote a checkers program that "played thousands of games against itself" to improve.
+* Arthur Samuel wrote a checkers program that "played thousands of games against itself"[2] to improve.
 
 ![Draughts/Checkers](notes/assets/International_draughts.jpg)
 
@@ -59,7 +59,7 @@ to learn without being programmed.
 
 ## What is Machine Learning?
 
-* Tom Mitchell (1998): Study of algorithms that:
+* Tom Mitchell (1998): Study of algorithms that:[2][3]
     * improve on a given task _T_
     * a certain performance measure _P_
     * given experience _E_
@@ -86,17 +86,33 @@ to learn without being programmed.
 
 ## What is Machine Learning?
 
-**Typical Programs**
+**Typical Programs**[3]
 
 ![Data+Program = Output](notes/assets/typical-app.png)
 
-**Machine Learning**
+**Machine Learning**[3]
 
 ![Data+Output = Program](notes/assets/ml-app.png)
 
 ---
 
-## More Examples
+## Machine Learning Workflow
+
++++
+
+![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/mlworkflowperception.png)
+
+Data > ??? > ML Algorithm > ??? > $$$ [4]
+
++++
+
+![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/MLworkflownotsimple.png)
+
+Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
+
+---
+
+## More Sample Problems
 
 **Image recognition**
 
@@ -120,62 +136,56 @@ to learn without being programmed.
 
 ---
 
-## Types of Problem
+## Types of Algorithms
 
 * Supervised learning
 * Unsupervised learning
 * Reinforced learning
 
----
++++
 
-## Sample ML Algorithms
+**Supervised learning** [5]
 
-* Decision Trees
-* Artificial Neural Networks
-* Support Vector Machine
-* Bayesian networks
-* Clustering
+* The computer is presented with example inputs and their desired outputs, given by a "teacher", and the goal is to learn a general rule that maps inputs to outputs.
 
----
+**Unsupervised learning** [5]
 
-## Machine Learning Workflow
+* No labels are given to the learning algorithm, leaving it on its own to find structure in its input. Unsupervised learning can be a goal in itself (discovering hidden patterns in data) or a means towards an end
+
 
 +++
 
-![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/mlworkflowperception.png)
+**Reinforced learning** [5]
 
-Data > ??? > ML Algorithm > ??? > $$$ 
-
-+++
-
-![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/MLworkflownotsimple.png)
-
-Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$ 
+* A computer program interacts with a dynamic environment in which it must perform a certain goal (such as driving a vehicle or playing a game against an opponent). The program is provided feedback in terms of rewards and punishments as it navigates its problem space.
 
 ---
 
-## Where to start?
+## What's next?
 
-* Python + R
-  * Python + sklearn
-  * Most common
-
-+++
-
-* Mathlab / Octave
-  * linear algebra and optimization implementation
-  * good for implementing ML algo from scratch (?)
+1. Compare several machine learning libraries. Show the similarities between them. Usual pattern is:
+  * Create and configure algorithm
+  * Read training data
+  * Run algorithm to generate a model
+  * Use the model on test data
 
 +++
 
-* Java
-  * weka
-  * spark + mllib
-  * deeplearning4j
+2. Look into how some of the algorithm works
+  * Decision tree
+  * Neural Net
+  * ???
+
++++
+
+3. Sample system : end-to-end workflow
+  * Optical character recognition (?)
 
 ---
 ## References
 
-* https://www.coursera.org/learn/machine-learning/
-* https://www.kaggle.com/
-* http://www.seas.upenn.edu/~cis519/
+[1] https://www.kaggle.com/
+[2] https://www.coursera.org/learn/machine-learning/
+[3] http://www.seas.upenn.edu/~cis519/
+[4] https://en.wikipedia.org/wiki/Machine_learning
+[5] https://www.ibm.com/developerworks/community/blogs/jfp/entry/The_Machine_Learning_Workflow?lang=en
