@@ -153,6 +153,27 @@ Data > ??? > ML Algorithm > ??? > $$$
 Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$ 
 
 ---
+
+## Where to start?
+
+* Python + R
+  * Python + sklearn
+  * Most common
+
++++
+
+* Mathlab / Octave
+  * linear algebra and optimization implementation
+  * good for implementing ML algo from scratch (?)
+
++++
+
+* Java
+  * weka
+  * spark + mllib
+  * deeplearning4j
+
+---
 ## References
 
 * https://www.coursera.org/learn/machine-learning/
