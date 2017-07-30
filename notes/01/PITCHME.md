@@ -53,7 +53,7 @@ to learn without being programmed.
 
 * Arthur Samuel wrote a checkers program that "played thousands of games against itself" to improve.
 
-![Image](notes/assets/International_draughts.jpg)
+![Draughts/Checkers](notes/assets/International_draughts.jpg)
 
 ---
 
@@ -88,23 +88,69 @@ to learn without being programmed.
 
 **Typical Programs**
 
-![Image](notes/assets/typical-app.png)
+![Data+Program = Output](notes/assets/typical-app.png)
 
 **Machine Learning**
 
-![Image](notes/assets/ml-app.png)
+![Data+Output = Program](notes/assets/ml-app.png)
 
 ---
 
-## Types of Learning Algorithms
+## More Examples
+
+**Image recognition**
+
+* https://www.kaggle.com/c/digit-recognizer
+
+![Kaggle Image](https://kaggle2.blob.core.windows.net/competitions/kaggle/3004/logos/front_page.png)
 
 +++
 
-## Supervised
+**Predict house price**
+
+* https://www.kaggle.com/c/house-prices-advanced-regression-techniques
+
+![Kaggle Image](https://kaggle2.blob.core.windows.net/competitions/kaggle/5407/media/housesbanner.png)
 
 +++
 
-## Unsuppervised
+**Spam Detection**
+
+* https://www.kaggle.com/karthickveerakumar/spam-filter
+
+---
+
+## Types of Problem
+
+* Supervised learning
+* Unsupervised learning
+* Reinforced learning
+
+---
+
+## Sample ML Algorithms
+
+* Decision Trees
+* Artificial Neural Networks
+* Support Vector Machine
+* Bayesian networks
+* Clustering
+
+---
+
+## Machine Learning Workflow
+
++++
+
+![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/mlworkflowperception.png)
+
+Data > ??? > ML Algorithm > ??? > $$$ 
+
++++
+
+![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/MLworkflownotsimple.png)
+
+Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$ 
 
 ---
 ## References
