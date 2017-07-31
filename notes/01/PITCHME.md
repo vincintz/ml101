@@ -108,6 +108,14 @@ Data > ??? > ML Algorithm > ??? > $$$ [4]
 
 Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 
++++
+
+### Our focus will be on
+
+* ML Algorithim to generate models
+* Using the model to make predictions
+* How to manage accuracy loss (bias vs variance)
+
 ---
 
 ## More Sample Problems
