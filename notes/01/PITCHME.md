@@ -161,7 +161,6 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 
 * Supervised learning
 * Unsupervised learning
-* Reinforced learning
 
 +++
 
@@ -174,13 +173,6 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 **Unsupervised learning** [5]
 
 * No labels are given to the learning algorithm, leaving it on its own to find structure in its input. Unsupervised learning can be a goal in itself (discovering hidden patterns in data) or a means towards an end
-
-
-+++
-
-**Reinforced learning** [5]
-
-* A computer program interacts with a dynamic environment in which it must perform a certain goal (such as driving a vehicle or playing a game against an opponent). The program is provided feedback in terms of rewards and punishments as it navigates its problem space.
 
 ---
 
