@@ -11,7 +11,7 @@
 
 +++
 
-* This is actually a public competition in kaggle
+* This was an actual competition in kaggle
 
 * https://www.kaggle.com/c/GiveMeSomeCredit
 
