@@ -40,7 +40,7 @@
 
 * **Solution 3**: Machine Learning
 
-* Now, what is machine learning? What can (and can't) it do?
+* Now, what is machine learning?
 
 ---
 
@@ -82,9 +82,7 @@ to learn without being programmed.
 * _P_: probability that prediction is correct
 * _E_: previous loan application result
 
----
-
-## What is Machine Learning?
++++
 
 **Typical Programs**[3]
 
@@ -112,9 +110,76 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 
 ### Our focus will be on
 
-* ML Algorithim to generate models
-* Using the model to make predictions
-* How to manage accuracy loss (bias vs variance)
+* Example ML libraries to generate models, and make predictions
+* Look at a couple of sample algorithms, and how they work
+* What to do when predictions are incorrect (bias-vs-variance)
+
+---
+
+## Types of Learning Algorithms
+
+* Supervised learning
+* Unsupervised learning
+
++++
+
+**Supervised learning**
+
+* In supervised learning, we are given a data set and already know what our correct output should look like
+* The model, given new inputs, will give a _predicted_ output
+
++++
+
+**Supervised learning**
+
+Examples:
+* Given a picture of a person, we have to predict their age on the basis of the given picture (Regression)
+* Given a patient with a tumor, we have to predict whether the tumor is malignant or benign (Classification)
+
++++
+
+**Unsupervised learning**
+
+* Unsupervised learning allows us to approach problems with little or no idea what our results should look like.
+* We can derive structure from data where we don't necessarily know the effect of the variables.
++++
+
+**Unsupervised learning**
+
+Example:
+* Clustering: Take a collection of 1,000,000 different genes, and find a way to automatically group these genes into groups that are somehow similar or related by different variables, such as lifespan, location, roles, and so on.
+
+---
+
+## What's next?
+
+* Compare several machine learning libraries. Show the similarities between them. Usual pattern is:
+  * Create and configure algorithm
+  * Read training data
+  * Run algorithm to generate a model
+  * Use the model on test data
+
++++
+
+* Look into how some of the algorithm works
+  * Decision tree
+  * Neural Net
+  * ???
+
++++
+
+* Sample system : end-to-end workflow
+  * Optical character recognition (?)
+
+---
+
+## References
+
+* [1] https://www.kaggle.com/
+* [2] https://www.coursera.org/learn/machine-learning/
+* [3] http://www.seas.upenn.edu/~cis519/
+* [4] https://en.wikipedia.org/wiki/Machine_learning
+* [5] https://www.ibm.com/developerworks/community/blogs/jfp/entry/The_Machine_Learning_Workflow?lang=en
 
 ---
 
@@ -154,53 +219,3 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 * https://www.kaggle.com/cwiloc/climate-data-from-ocean-ships
 
 * Sample data from 18th to early 19th century sailors. Find any sort of correlation.
-
----
-
-## Types of Algorithms
-
-* Supervised learning
-* Unsupervised learning
-
-+++
-
-**Supervised learning** [5]
-
-* The computer is presented with example inputs and their desired outputs, given by a "teacher", and the goal is to learn a general rule that maps inputs to outputs.
-
-+++
-
-**Unsupervised learning** [5]
-
-* No labels are given to the learning algorithm, leaving it on its own to find structure in its input. Unsupervised learning can be a goal in itself (discovering hidden patterns in data) or a means towards an end
-
----
-
-## What's next?
-
-* Compare several machine learning libraries. Show the similarities between them. Usual pattern is:
-  * Create and configure algorithm
-  * Read training data
-  * Run algorithm to generate a model
-  * Use the model on test data
-
-+++
-
-* Look into how some of the algorithm works
-  * Decision tree
-  * Neural Net
-  * ???
-
-+++
-
-* Sample system : end-to-end workflow
-  * Optical character recognition (?)
-
----
-## References
-
-* [1] https://www.kaggle.com/
-* [2] https://www.coursera.org/learn/machine-learning/
-* [3] http://www.seas.upenn.edu/~cis519/
-* [4] https://en.wikipedia.org/wiki/Machine_learning
-* [5] https://www.ibm.com/developerworks/community/blogs/jfp/entry/The_Machine_Learning_Workflow?lang=en
