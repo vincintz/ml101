@@ -82,38 +82,6 @@ to learn without being programmed.
 * _P_: probability that prediction is correct
 * _E_: previous loan application result
 
-+++
-
-**Typical Programs**[3]
-
-![Data+Program = Output](notes/assets/typical-app.png)
-
-**Machine Learning**[3]
-
-![Data+Output = Program](notes/assets/ml-app.png)
-
----
-
-## Machine Learning Workflow
-
-![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/mlworkflowperception.png)
-
-Data > ??? > ML Algorithm > ??? > $$$ [4]
-
-+++
-
-![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/MLworkflownotsimple.png)
-
-Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
-
-+++
-
-### Our focus will be on
-
-* Example ML libraries to generate models, and make predictions
-* Look at a couple of sample algorithms, and how they work
-* What to do when predictions are incorrect (bias-vs-variance)
-
 ---
 
 ## Types of Learning Algorithms
@@ -151,25 +119,25 @@ Example:
 
 ---
 
-## What's next?
+## Machine Learning Workflow
 
-* Compare several machine learning libraries. Show the similarities between them. Usual pattern is:
-  * Create and configure algorithm
-  * Read training data
-  * Run algorithm to generate a model
-  * Use the model on test data
+![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/mlworkflowperception.png)
+
+Data > ??? > ML Algorithm > ??? > $$$ [4]
 
 +++
 
-* Look into how some of the algorithm works
-  * Decision tree
-  * Neural Net
-  * ???
+![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/MLworkflownotsimple.png)
+
+Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 
 +++
 
-* Sample system : end-to-end workflow
-  * Optical character recognition (?)
+### Our focus will be on
+
+* Example ML libraries to generate models, and make predictions
+* Look at a couple of sample algorithms, and how they work
+* What to do when predictions are incorrect (bias-vs-variance)
 
 ---
 
