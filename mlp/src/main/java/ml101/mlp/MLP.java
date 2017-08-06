@@ -1,8 +1,6 @@
 package ml101.mlp;
 
 import ml101.mlp.activation.ActivationFn;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.Arrays;
 
@@ -10,22 +8,51 @@ import java.util.Arrays;
  * Multi Layered Perceptron
  */
 public class MLP {
+    private static final int MAX_NODES = 1000;
     private final ActivationFn activationFn;
-    private final INDArray[] weights;
+    private final double[][][] weights;
 
-    private MLP(final ActivationFn activationFn, final INDArray... weights) {
-        this.activationFn = activationFn;
-        this.weights = weights;
+    public MLP(final ActivationFn activationFn, final double[][][] weights) {
+        this.activationFn  = activationFn;
+        this.weights       = weights;
     }
 
-    public double[] compute(double... x) {
-        INDArray vec = Nd4j.create(x);
-        for (final INDArray w : this.weights) {
-            vec = Nd4j.prepend(vec, 1, -1.0, 1);
-            vec = w.mmul(vec.transpose()).transpose();
-            System.out.println("$ " + vec);
+    public double[] compute(double... input) {
+        double[] vector = input;
+        for (int l = 0; l < weights.length; l++) {
+            vector = multiplyMatrixVector(weights[l], vector);
+            activate(vector);
         }
-        return new double[] {vec.getDouble(0)};
+        return vector;
+    }
+
+    private void displayWeights(double[][][] weights) {
+        for (int l = 0; l < weights.length; l++) {
+            for (int j = 0; j < weights[l].length; j++) {
+                for (int i = 0; i < weights[l][j].length; i++) {
+                    System.out.print(weights[l][j][i] + "    ");
+                }
+                System.out.println();
+            }
+            System.out.println("--------");
+        }
+    }
+
+    private double[] multiplyMatrixVector(double matrix[][], double[] vector) {
+        double[] output = new double[matrix.length];
+        for (int j = 0; j < matrix.length; j++) {
+            output[j] = -1.0 * matrix[j][0];
+            for (int i = 0; i < matrix[j].length-1; i++) {
+                output[j] += vector[i] * matrix[j][i+1];
+            }
+        }
+        return output;
+    }
+
+    private void activate(double[] vector) {
+        for (int i = 0; i < vector.length; i++) {
+            vector[i] = activationFn.compute(vector[i]);
+        }
     }
 
     /**
@@ -39,17 +66,19 @@ public class MLP {
 
         public MLP build() {
             final int numLayers = nodesPerLayer.length - 1;
-            INDArray[] weights = new INDArray[numLayers];
+            double[][][] weights = new double[numLayers][][];
             int start = 0;
             for (int l = 0; l < nodesPerLayer.length - 1; l++) {
-                int cols = nodesPerLayer[l] + 1;
                 int rows = nodesPerLayer[l+1];
-                double[] subWeights = Arrays.copyOfRange(rawWeights, start, start + cols*rows);
-                weights[l] = Nd4j.create(subWeights, new int[] {rows, cols});
-                start += cols*rows;
+                int cols = nodesPerLayer[l] + 1;
+                weights[l] = new double[rows][];
+                for (int j = 0; j < rows; j++) {
+                    weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
+                    start += cols;
+                }
+                start += rows;
             }
-            final MLP mlp = new MLP(activationFn, weights);
-            return mlp;
+            return new MLP(activationFn, weights);
         }
 
         public Config activation(final ActivationFn fn) {
@@ -57,13 +86,13 @@ public class MLP {
             return this;
         }
 
-        public MLP.Config layers(final int... ll) {
-            this.nodesPerLayer = ll;
+        public MLP.Config layers(final int... nodesPerLayer) {
+            this.nodesPerLayer = nodesPerLayer;
             return this;
         }
 
-        public Config weights(double... rawWeights) {
-            this.rawWeights = rawWeights;
+        public Config weights(double... weights) {
+            this.rawWeights = weights;
             return this;
         }
 
