@@ -15,10 +15,11 @@ public class MLP {
     public MLP(final ActivationFn activationFn, final double[][][] weights) {
         this.activationFn  = activationFn;
         this.weights       = weights;
+        displayWeights();
     }
 
     public double[] compute(double... input) {
-        double[] vector = input;
+        double[] vector = input.clone();
         for (int l = 0; l < weights.length; l++) {
             vector = multiplyMatrixVector(weights[l], vector);
             activate(vector);
@@ -26,15 +27,17 @@ public class MLP {
         return vector;
     }
 
-    private void displayWeights(double[][][] weights) {
+    private void displayWeights() {
         for (int l = 0; l < weights.length; l++) {
+            System.out.println("-----------");
+            System.out.println("Layer " + (l+1));
+            System.out.println("-----------");
             for (int j = 0; j < weights[l].length; j++) {
                 for (int i = 0; i < weights[l][j].length; i++) {
-                    System.out.print(weights[l][j][i] + "    ");
+                    System.out.print(weights[l][j][i] + "  ");
                 }
                 System.out.println();
             }
-            System.out.println("--------");
         }
     }
 
@@ -76,7 +79,7 @@ public class MLP {
                     weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
                     start += cols;
                 }
-                start += rows;
+//                start += rows;
             }
             return new MLP(activationFn, weights);
         }

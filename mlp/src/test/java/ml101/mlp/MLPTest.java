@@ -17,7 +17,7 @@ public class MLPTest {
                                  -1.5, -1.0, -1.0,
                                   1.5,  1.0,  1.0)
                         .build();
-        //assertEquals(0.0, mlp.compute(0.0, 0.0)[0], DELTA);
+        assertEquals(0.0, mlp.compute(0.0, 0.0)[0], DELTA);
         assertEquals(1.0, mlp.compute(0.0, 1.0)[0], DELTA);
         assertEquals(1.0, mlp.compute(1.0, 0.0)[0], DELTA);
         assertEquals(0.0, mlp.compute(1.0, 1.0)[0], DELTA);
