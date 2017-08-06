@@ -8,7 +8,6 @@ import java.util.Arrays;
  * Multi Layered Perceptron
  */
 public class MLP {
-    private static final int MAX_NODES = 1000;
     private final ActivationFn activationFn;
     private final double[][][] weights;
 
@@ -18,6 +17,10 @@ public class MLP {
         displayWeights();
     }
 
+    /**
+     * @param input
+     * @return
+     */
     public double[] compute(double... input) {
         double[] vector = input.clone();
         for (int l = 0; l < weights.length; l++) {
@@ -25,20 +28,6 @@ public class MLP {
             activate(vector);
         }
         return vector;
-    }
-
-    private void displayWeights() {
-        for (int l = 0; l < weights.length; l++) {
-            System.out.println("-----------");
-            System.out.println("Layer " + (l+1));
-            System.out.println("-----------");
-            for (int j = 0; j < weights[l].length; j++) {
-                for (int i = 0; i < weights[l][j].length; i++) {
-                    System.out.print(weights[l][j][i] + "  ");
-                }
-                System.out.println();
-            }
-        }
     }
 
     private double[] multiplyMatrixVector(double matrix[][], double[] vector) {
@@ -55,6 +44,20 @@ public class MLP {
     private void activate(double[] vector) {
         for (int i = 0; i < vector.length; i++) {
             vector[i] = activationFn.compute(vector[i]);
+        }
+    }
+
+    private void displayWeights() {
+        for (int l = 0; l < weights.length; l++) {
+            System.out.println("-----------");
+            System.out.println("Layer " + (l+1));
+            System.out.println("-----------");
+            for (int j = 0; j < weights[l].length; j++) {
+                for (int i = 0; i < weights[l][j].length; i++) {
+                    System.out.print(weights[l][j][i] + "  ");
+                }
+                System.out.println();
+            }
         }
     }
 
@@ -79,7 +82,6 @@ public class MLP {
                     weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
                     start += cols;
                 }
-//                start += rows;
             }
             return new MLP(activationFn, weights);
         }
