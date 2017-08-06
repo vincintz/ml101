@@ -1,4 +1,4 @@
-package ml101.mlp.ml101.mlp.activation;
+package ml101.mlp.activation;
 
 public class StepFn implements ActivationFn {
     @Override
