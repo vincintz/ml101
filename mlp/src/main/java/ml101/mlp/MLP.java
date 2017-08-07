@@ -4,30 +4,26 @@ import ml101.mlp.activation.ActivationFn;
 
 import java.util.Arrays;
 
-/**
- * MultiLayer-Perceptron
- */
 public class MLP {
-    private final ActivationFn activationFn;
-    private final double[][][] weights;
+    final private ActivationFn activationFn;
+    final private double[][][] weights;
+    final private double[][] computeBuffer;
 
-    public MLP(final ActivationFn activationFn, final double[][][] weights) {
+    MLP(final ActivationFn activationFn, final double[][][] weights, final double[][] computeBuffer) {
         this.activationFn  = activationFn;
         this.weights       = weights;
+        this.computeBuffer = computeBuffer;
         displayWeights();
     }
 
     public double[] compute(double... input) {
-        double[] vector = new double[input.length+1];
-        System.arraycopy(input, 0, vector, 1, input.length);
-        for (double[][] weight : weights) {
-            vector[0] = -1;
-            double[] output = new double[weight.length + 1];
-            multiplyMatrixVector(output, weight, vector);
-            vector = output;
-            activate(vector);
+        System.arraycopy(input, 0, computeBuffer[0], 1, input.length);
+        for (int l = 0; l < weights.length; l++) {
+            computeBuffer[l][0] = -1;
+            multiplyMatrixVector(computeBuffer[l+1], weights[l], computeBuffer[l]);
+            activate(computeBuffer[l+1]);
         }
-        return Arrays.copyOfRange(vector, 1, vector.length);
+        return computeBuffer[weights.length];
     }
 
     /**
@@ -41,6 +37,7 @@ public class MLP {
             double[][] matrix,
             double[]   vector) {
         for (int j = 0; j < matrix.length; j++) {
+            result[j+1] = 0.0;
             for (int i = 0; i < matrix[j].length; i++) {
                 result[j+1] += vector[i] * matrix[j][i];
             }
@@ -79,17 +76,20 @@ public class MLP {
         public MLP build() {
             final int numLayers = nodesPerLayer.length - 1;
             double[][][] weights = new double[numLayers][][];
+            double[][] computeBuffer = new double[nodesPerLayer.length][];
+            computeBuffer[0] = new double[nodesPerLayer[0] + 1];
             int start = 0;
             for (int l = 0; l < nodesPerLayer.length - 1; l++) {
                 int rows = nodesPerLayer[l+1];
                 int cols = nodesPerLayer[l] + 1;
+                computeBuffer[l+1] = new double[rows+1];
                 weights[l] = new double[rows][];
                 for (int j = 0; j < rows; j++) {
                     weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
                     start += cols;
                 }
             }
-            return new MLP(activationFn, weights);
+            return new MLP(activationFn, weights, computeBuffer);
         }
 
         public Config activation(final ActivationFn fn) {
