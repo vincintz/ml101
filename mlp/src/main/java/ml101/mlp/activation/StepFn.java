@@ -8,4 +8,9 @@ public class StepFn implements ActivationFn {
         else
             return 1.0;
     }
+
+    @Override
+    public double derivative(double z) {
+        throw new ArithmeticException("StepFn does not support derivative");
+    }
 }

@@ -5,7 +5,7 @@ import ml101.mlp.activation.ActivationFn;
 import java.util.Arrays;
 
 /**
- * Multi Layered Perceptron
+ * MultiLayer-Perceptron
  */
 public class MLP {
     private final ActivationFn activationFn;
@@ -17,28 +17,34 @@ public class MLP {
         displayWeights();
     }
 
-    /**
-     * @param input
-     * @return
-     */
     public double[] compute(double... input) {
-        double[] vector = input.clone();
-        for (int l = 0; l < weights.length; l++) {
-            vector = multiplyMatrixVector(weights[l], vector);
+        double[] vector = new double[input.length+1];
+        System.arraycopy(input, 0, vector, 1, input.length);
+        for (double[][] weight : weights) {
+            vector[0] = -1;
+            double[] output = new double[weight.length + 1];
+            multiplyMatrixVector(output, weight, vector);
+            vector = output;
             activate(vector);
         }
-        return vector;
+        return Arrays.copyOfRange(vector, 1, vector.length);
     }
 
-    private double[] multiplyMatrixVector(double matrix[][], double[] vector) {
-        double[] output = new double[matrix.length];
+    /**
+     * Cross Multiply a Matrix with a Vector. Pass the array to store the result in.
+     * @param result where to store the result
+     * @param matrix the Matrix
+     * @param vector the Vector
+     */
+    private void multiplyMatrixVector(
+            double[]   result,
+            double[][] matrix,
+            double[]   vector) {
         for (int j = 0; j < matrix.length; j++) {
-            output[j] = -1.0 * matrix[j][0];
-            for (int i = 0; i < matrix[j].length-1; i++) {
-                output[j] += vector[i] * matrix[j][i+1];
+            for (int i = 0; i < matrix[j].length; i++) {
+                result[j+1] += vector[i] * matrix[j][i];
             }
         }
-        return output;
     }
 
     private void activate(double[] vector) {

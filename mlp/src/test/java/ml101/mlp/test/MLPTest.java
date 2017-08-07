@@ -1,5 +1,6 @@
-package ml101.mlp;
+package ml101.mlp.test;
 
+import ml101.mlp.MLP;
 import ml101.mlp.activation.StepFn;
 import org.junit.Test;
 
