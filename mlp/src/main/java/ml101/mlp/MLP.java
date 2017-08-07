@@ -32,10 +32,7 @@ public class MLP {
      * @param matrix the Matrix
      * @param vector the Vector
      */
-    private void multiplyMatrixVector(
-            double[]   result,
-            double[][] matrix,
-            double[]   vector) {
+    private void multiplyMatrixVector(double[] result, double[][] matrix, double[] vector) {
         for (int j = 0; j < matrix.length; j++) {
             result[j+1] = 0.0;
             for (int i = 0; i < matrix[j].length; i++) {
