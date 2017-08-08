@@ -21,9 +21,10 @@
 
 ![Matrix Vector Multiply](https://wikimedia.org/api/rest_v1/media/math/render/svg/78e2239d1b2b9456fef36eb96c9369a1c00ce6a9)
 
-+++
 ```
-private void multiplyMatrixVector(double[] result, double[][] matrix, double[] vector) {
+private void multiplyMatrixVector(double[] result,
+                                  double[][] matrix,
+                                  double[] vector) {
     for (int j = 0; j < matrix.length; j++) {
         result[j+1] = 0.0;
         for (int i = 0; i < matrix[j].length; i++) {
