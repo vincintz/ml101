@@ -1,0 +1,24 @@
+group 'mlp'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+buildscript {
+    ext {
+        node4j_version = "0.9.0"
+        slf4j_version = "1.7.25"
+    }
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.nd4j:nd4j-api:${node4j_version}"
+    compile "org.nd4j:nd4j-native-platform:${node4j_version}"
+    compile "org.slf4j:slf4j-simple:${slf4j_version}"
+    compile "org.slf4j:slf4j-api:${slf4j_version}"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
