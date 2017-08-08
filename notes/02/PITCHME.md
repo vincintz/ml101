@@ -1,12 +1,8 @@
 # Machine Learning 101
-## Linear Regression
-
----
-# Machine Learning 101
 ## Artificial Neural Networks
 
 ---
-## Recall
+## Question from last week
 ### Q: What's the difference between statistical modelling tools and Machine Learning?
 * Statistical modelling (like regression analysis) overlaps with ML)
 * That is: Some ML are subranches of statistics / some statistical tools are ML algo
@@ -39,6 +35,10 @@ private void multiplyMatrixVector(double[] result, double[][] matrix, double[] v
 
 * Derivative of complicated functions
 * Can be googled!
+
++++
+### Biology
+* Pictures + wikipedia
 
 ---
 ## Recall
