@@ -2,7 +2,6 @@
 ## Artificial Neural Networks
 
 ---
-## Question from last week
 ### Q: What's the difference between statistical modelling tools and Machine Learning?
 * Statistical modelling (like regression analysis) overlaps with ML)
 * That is: Some ML are subranches of statistics / some statistical tools are ML algo
@@ -19,6 +18,23 @@
 ### Linear Algebra
 
 * Matrix-Vector cross multiplication
+
+\begin{align}
+&\begin{bmatrix}
+m_{11}&m_{12}&m_{13}\\
+m_{22}&m_{22}&m_{23}
+\end{bmatrix}
+\begin{bmatrix}
+v_1\\v_2\\v_3
+\end{bmatrix}\\
+&=
+\begin{bmatrix}
+m_{11}.v_1 + m_{12}.v_2 + m_{13}.v_3\\
+m_{21}.v_1 + m_{22}.v_2 + m_{23}.v_3\\
+m_{31}.v_1 + m_{32}.v_2 + m_{33}.v_3\\
+\end{bmatrix}\nonumber
+\end{align}
+
 ```
 private void multiplyMatrixVector(double[] result, double[][] matrix, double[] vector) {
     for (int j = 0; j < matrix.length; j++) {
