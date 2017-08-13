@@ -19,7 +19,7 @@ public class MLP {
     public double[] compute(double... input) {
         System.arraycopy(input, 0, computeBuffer[0], 1, input.length);
         for (int l = 0; l < weights.length; l++) {
-            computeBuffer[l][0] = -1;
+            computeBuffer[l][0] = 1.0;
             multiplyMatrixVector(computeBuffer[l+1], weights[l], computeBuffer[l]);
             activate(computeBuffer[l+1]);
         }

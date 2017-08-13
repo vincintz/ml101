@@ -1,6 +1,5 @@
 package ml101.mlp;
 
-import ml101.mlp.MLP;
 import ml101.mlp.activation.StepFn;
 import org.junit.Test;
 
@@ -14,9 +13,9 @@ public class MLPTest {
                 new MLP.Config()
                         .activation(new StepFn())
                         .layers(2, 2, 1)
-                        .weights( 0.5,  1.0,  1.0,
-                                 -1.5, -1.0, -1.0,
-                                  1.5,  1.0,  1.0)
+                        .weights( -0.5,  1.0,  1.0,
+                                   1.5, -1.0, -1.0,
+                                  -1.5,  1.0,  1.0)
                         .build();
         assertEquals(0.0, mlp.compute(0.0, 0.0)[1], DELTA);
         assertEquals(1.0, mlp.compute(0.0, 1.0)[1], DELTA);
