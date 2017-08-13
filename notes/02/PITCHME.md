@@ -29,225 +29,90 @@
 ---
 ### Sample Activation Functions
 #### Step Function
-![](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/stepfn.png)
-![Step Function](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Dirac_distribution_CDF.svg/325px-Dirac_distribution_CDF.svg.png)
+<img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/stepfn.png" width="80%">
++++
+#### Step Function
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Dirac_distribution_CDF.svg/325px-Dirac_distribution_CDF.svg.png" width="80%">
+
 +++
 #### Step Function
 * Good for demo purposes
-* We need the derivative during training
-
+* But we need the derivative during training
 +++
 #### Logistic Function
-![](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/logisticfn.png)
-![Step Function](https://upload.wikimedia.org/wikipedia/commons/8/88/Logistic-curve.svg)
-
----
-### Boolean functions
-
-#### OR
-| x1 | x2 | output |
-| -- | -- | ------ |
-| 0  | 0  | 0      |
-| 0  | 1  | 1      |
-| 1  | 0  | 1      |
-| 1  | 1  | 1      |
+<img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/logisticfn.png" width="80%">
++++
+#### Logistic Function
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/88/Logistic-curve.svg" width="80%">
 
 +++
-#### AND
-| x1 | x2 | output |
-| -- | -- | ------ |
-| 0  | 0  | 0      |
-| 0  | 1  | 0      |
-| 1  | 0  | 0      |
-| 1  | 1  | 1      |
-
----
-#### Challenge - XOR
+#### Logistic Function - derivative
+<img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/dlogisticfn.png" width="80%">
 
 +++
-* XOR output is **not** linearly seperable
-
----
-### We need to implement
-| Implement   | AKA              | Sample           |
-| ----------- | ---------------- | ---------------- |
-| Task        | Predict/Classify | Feed forward     |
-| Performance | Cost function    | Cost function    |
-| Experience  | Training         | Back propagation |
-
----
-## Recall
-### What is Machine Learning?
-
-* Tom Mitchell (1998): Study of algorithms that:[2][3]
-    * improve on a given task _T_
-    * a certain performance measure _P_
-    * given experience _E_
-
-* A well defined learning task is given by _< T, P, E >_
-
-+++
-### For NN, we need to implement
-| What        | AKA              | Sample           |
-| ----------- | ---------------- | ---------------- |
-| Task        | Predict/Classify | Feed forward     |
-| Performance | Cost function    | Cost function    |
-| Experience  | Training         | Back propagation |
-
----
-### Two phases
-
-* Training
-  * Data -> Training Algo => Model
-* Usage
-  * Data -> Model => Prediction
-
----
-
-
-
-
-
-
-
----
-### Q: What's the difference between statistical modelling tools and Machine Learning?
-* Statistical modelling (like regression analysis) overlaps with ML)
-* That is: Some ML are subranches of statistics / some statistical tools are ML algo
-* https://en.wikipedia.org/wiki/Regression_analysis
-
----
-## Prerequisite
-
-1. Linear Algebra
-2. Calculus
-
-+++
-### Linear Algebra
-
-* Matrix-Vector cross multiplication
-![Image](./assets/md/assets/metrix-vector.png.jpg)
-
-+++
-* Matrix-Vector cross multiplication
 ```
-private void multiplyMatrixVector(double[] result,
-                                  double[][] matrix,
-                                  double[] vector) {
-    for (int j = 0; j < matrix.length; j++) {
-        result[j+1] = 0.0;
-        for (int i = 0; i < matrix[j].length; i++) {
-            result[j+1] += vector[i] * matrix[j][i];
-        }
-    }
+#### Step Function
+public class StepFn implements ActivationFn {
+  @Override
+  public double compute(double z) {
+    if (z < 0)
+      return 0.0;
+    else
+      return 1.0;
+  }
+
+  @Override
+  public double derivative(double z) {
+    throw new ArithmeticException(
+          "StepFn does not support derivative");
+  }
 }
 ```
-
 +++
-### Calculus
-
-* Derivatives
-* We need the derivative of a specific function during training
-
-+++
-* Our interface
-```
-public interface ActivationFn {
-    double compute(double z);
-    double derivative(double z);
-}
-```
-* Sample implementation
+#### Logistic Function
 ```
 public class LogisticFn implements ActivationFn {
-    @Override
-    public double compute(double z) {
-        return 1.0 / (1.0 + Math.exp(-z));
-    }
+  @Override
+  public double compute(double z) {
+    return 1.0 / (1.0 + Math.exp(-z));
+  }
 
-    @Override
-    public double derivative(double z) {
-        double fz = compute(z);
-        return fz * (1.0 - fz);
-    }
+  @Override
+  public double derivative(double z) {
+    double fz = compute(z);
+    return fz * (1.0 - fz);
+  }
 }
 ```
+---
+### What can our neuron do?
+
++++
+#### Boolean OR
+<img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/or.png" width="90%">
+
++++
+#### Boolean AND
+<img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/and.png" width="90%">
+
++++
+#### Challenge XOR
+<img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/xor.png" width="50%">
+
++++
+* Can't be represented by a neuron
+* But:<br/>
+<img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/xorfn.png" width="80%">
++++
+<img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/xor-mlp.png" width="80%">
 
 ---
-## Recall
-### What is Machine Learning?
+### Learning stage
 
-* Tom Mitchell (1998): Study of algorithms that:[2][3]
-    * improve on a given task _T_
-    * a certain performance measure _P_
-    * given experience _E_
-
-* A well defined learning task is given by _< T, P, E >_
-
-+++
-### We need to implement
-| What        | AKA              | Sample           |
-| ----------- | ---------------- | ---------------- |
-| Task        | predict/classify | Feed forward     |
-| Performance | Cost function    | Cost function    |
-| Experience  | Training         | Back propagation |
-
-+++
-### Two phases
-
-* Training
-* Usage
-
-
-+++
-### Training
-1. Configure a learning algo
-2. Run training => trained model
-
-### Usage
-* We use the model to make predictions
-
----
-### Neural Networks
-
----
-### Concepts
-
-* Neuron
-* Can represent an AND/OR function
-* How to represent XOR
-
-+++
-
-Combine Neurons
-
-* 2 layer XOR representation
-
----
-
-### Multi-layered Perceptron
-
-* Def'n: Type of ANN
-* Picture of MLP
-
-+++
-
-### Program representation
-
-* OOP? Matrix?
-
----
-
-### Training
-
-mlp.train(x, y);
-
-+++
-
-### Usage
-
-y' = mlp.predict(x')
-
+* Our XOR network was programmed
+  * we chose the weights to solve the problem
+* MLP algorithm to _learn_ the weights
+  * Backpropagation
 
 ---
 Resources
