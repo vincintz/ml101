@@ -12,21 +12,15 @@
 
 1. Linear Algebra
 2. Calculus
-3. Biology
 
 +++
 ### Linear Algebra
 
 * Matrix-Vector cross multiplication
+![M * v = result](notes/assets/metrix-vector.png.jpg)
 
-![Matrix Vector Multiply](https://wikimedia.org/api/rest_v1/media/math/render/svg/78e2239d1b2b9456fef36eb96c9369a1c00ce6a9)
-
-$$
-\begin{bmatrix} a & b \\ c & d \\ e & f \end{bmatrix}
- * \begin{bmatrix} x \\ y \\ \end{bmatrix}
- = \begin{bmatrix} a*x + b*y \\ c*x + d*y \\ e*x + f*y\end{bmatrix}
-$$
-
++++
+* Matrix-Vector cross multiplication
 ```
 private void multiplyMatrixVector(double[] result,
                                   double[][] matrix,
@@ -43,12 +37,32 @@ private void multiplyMatrixVector(double[] result,
 +++
 ### Calculus
 
-* Derivative of complicated functions
-* Can be googled!
+* Derivatives
+* We need the derivative of a specific function during training
 
 +++
-### Biology
-* Pictures + wikipedia
+* Our interface
+```
+public interface ActivationFn {
+    double compute(double z);
+    double derivative(double z);
+}
+```
+* Sample implementation
+```
+public class LogisticFn implements ActivationFn {
+    @Override
+    public double compute(double z) {
+        return 1.0 / (1.0 + Math.exp(-z));
+    }
+
+    @Override
+    public double derivative(double z) {
+        double fz = compute(z);
+        return fz * (1.0 - fz);
+    }
+}
+```
 
 ---
 ## Recall
