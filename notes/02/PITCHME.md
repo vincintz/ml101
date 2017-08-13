@@ -21,6 +21,9 @@
 
 ![Matrix Vector Multiply](https://wikimedia.org/api/rest_v1/media/math/render/svg/78e2239d1b2b9456fef36eb96c9369a1c00ce6a9)
 
+$$\begin{bmatrix} a & b \newline c & d \newline e & f \end{bmatrix} *\begin{bmatrix} x \newline y \newline \end{bmatrix} =\begin{bmatrix} a*x + b*y \newline c*x + d*y \newline e*x + f*y\end{bmatrix}$$
+
+
 ```
 private void multiplyMatrixVector(double[] result,
                                   double[][] matrix,
