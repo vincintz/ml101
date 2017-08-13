@@ -29,9 +29,7 @@
 ---
 ### Sample Activation Functions
 #### Step Function
-$$z = \sum_iw_i*input_i \\
-step(z) = 1: if (z + bias \geq 0) \\
-= 0: otherwise$$
+![](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/stepfn.png)
 ![Step Function](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Dirac_distribution_CDF.svg/325px-Dirac_distribution_CDF.svg.png)
 +++
 #### Step Function
@@ -40,6 +38,7 @@ step(z) = 1: if (z + bias \geq 0) \\
 
 +++
 #### Logistic Function
+![](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/logisticfn.png)
 ![Step Function](https://upload.wikimedia.org/wikipedia/commons/8/88/Logistic-curve.svg)
 
 ---
