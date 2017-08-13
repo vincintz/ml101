@@ -50,8 +50,8 @@
 <img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/dlogisticfn.png" width="80%">
 
 +++
-#### Step Function
 ```
+#### Step Function
 public class StepFn implements ActivationFn {
   @Override
   public double compute(double z) {
@@ -109,14 +109,12 @@ public class LogisticFn implements ActivationFn {
 ---
 ### Learning stage
 
-* Our XOR network was programmed
+* But our XOR network was programmed
   * we chose the weights to solve the problem
 * MLP algorithm to _learn_ the weights
   * Backpropagation
+* We need to define the MLP network architecture
+  * Number of layers (2 in our example, not counting the input layer)
+  * Number of nodes per layer
+  * Activation function
 
----
-Resources
-
-<a target="_blank" href="https://intelligentjava.wordpress.com/2015/04/28/machine-learning-decision-tree/">https://intelligentjava.wordpress.com/2015/04/28/machine-learning-decision-tree/</a>
-<a target="_blank" href="https://math.stackexchange.com/questions/78575/derivative-of-sigmoid-function-sigma-x-frac11e-x">https://math.stackexchange.com/questions/78575/derivative-of-sigmoid-function-sigma-x-frac11e-x</a>
-<a target="_blank" href="https://en.wikipedia.org/wiki/Matrix_multiplication">https://en.wikipedia.org/wiki/Matrix_multiplication</a>
