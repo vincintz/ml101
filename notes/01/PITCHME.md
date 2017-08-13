@@ -1,7 +1,6 @@
 # Machine Learning 101
 
 ---
-
 ## Motivation
 
 * **Loan Application Approval System**
@@ -10,7 +9,6 @@
 * Input application form (name, age, income, etc...)
 
 +++
-
 * This was an actual competition in kaggle
 
 * https://www.kaggle.com/c/GiveMeSomeCredit
@@ -21,7 +19,6 @@
     * 3rd: $500 
 
 +++
-
 * **Solution 1**: Code the rules
 
 * Nested if-then-else?
@@ -29,7 +26,6 @@
 * Drawback: Updating the rules require another build-test-deploy cycle
 
 +++
-
 * **Solution 2**: Rules Engine
 
 * Rules can be updated without updating the program
@@ -37,26 +33,22 @@
 * Drawback: Who will write the rules?
 
 +++
-
 * **Solution 3**: Machine Learning
 
 * Now, what is machine learning?
 
 ---
-
 ## What is Machine Learning?
 
 * Arthur Samuel (1959): Field of study that gives computers the ability 
 to learn without being programmed.
 
 +++
-
 * Arthur Samuel wrote a checkers program that "played thousands of games against itself"[2] to improve.
 
 ![Draughts/Checkers](notes/assets/International_draughts.jpg)
 
 ---
-
 ## What is Machine Learning?
 
 * Tom Mitchell (1998): Study of algorithms that:[2][3]
@@ -67,7 +59,6 @@ to learn without being programmed.
 * A well defined learning task is given by _< T, P, E >_
 
 +++
-
 * **Checkers**
 
 * _T_: playing checkers
@@ -75,7 +66,6 @@ to learn without being programmed.
 * _E_: simulated games against itself
 
 +++
-
 * **Loan Application System**
 
 * _T_: predicting loan default
@@ -83,21 +73,37 @@ to learn without being programmed.
 * _E_: previous loan application result
 
 ---
+## Machine Learning Workflow
 
+![ML Perception](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/mlworkflowperception.png)
+
+Data > ??? > ML Algorithm > ??? > $$$ [4]
+
++++
+![ML Reality](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/MLworkflownotsimple.png)
+
+Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
+
+---
+## Two phase
+* Training Data -> Learning Algo => Model
+* Test Data -> Model => Prediction
+
+---
 ## Types of Learning Algorithms
 
 * Supervised learning
 * Unsupervised learning
 
 +++
-
 **Supervised learning**
 
 * In supervised learning, we are given a data set and already know what our correct output should look like
 * The model, given new inputs, will give a _predicted_ output
+* Sample problems: _classification_ and _regression_
+* Sample algorithms: Decision Trees, Regression, Neural Networks, Support Vector Machines
 
 +++
-
 **Supervised learning**
 
 Examples:
@@ -105,42 +111,64 @@ Examples:
 * Given a patient with a tumor, we have to predict whether the tumor is malignant or benign (Classification)
 
 +++
-
 **Unsupervised learning**
 
 * Unsupervised learning allows us to approach problems with little or no idea what our results should look like.
 * We can derive structure from data where we don't necessarily know the effect of the variables.
-+++
 
++++
 **Unsupervised learning**
 
-Example:
-* Clustering: Take a collection of 1,000,000 different genes, and find a way to automatically group these genes into groups that are somehow similar or related by different variables, such as lifespan, location, roles, and so on.
+* Training data does **not** have expected output
+* Sample problems: clustering, dimensionality reduction and association rule learning
+* Example:
+  * Clustering: Take a collection of 1,000,000 different genes, and find a way to automatically group these genes into groups that are somehow similar or related by different variables, such as lifespan, location, roles, and so on.
 
 ---
+## Supervised learning
 
-## Machine Learning Workflow
+###  Decision Trees
 
-![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/mlworkflowperception.png)
-
-Data > ??? > ML Algorithm > ??? > $$$ [4]
-
-+++
-
-![Image](https://www.ibm.com/developerworks/community/blogs/jfp/resource/BLOGS_UPLOADED_IMAGES/MLworkflownotsimple.png)
-
-Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
+* Training Phase: 
+* Prediction Phase: 
 
 +++
+### Regression Analysis
 
-### Our focus will be on
+* Training Phase:
+  * Given a set if X => Y mappings
+  * Finds the function, $$f(x)$$, that best fits the values
+* Prediction Phase: 
+  * 
+
+![Linear Regression](https://upload.wikimedia.org/wikipedia/commons/3/3a/Linear_regression.svg)
+
++++
+### Neural Networks
+
+* Training Phase: 
+* Prediction Phase: 
+
+---
+## Unsupervised learning
+
+### Clustering
+* Training Phase: 
+* Prediction Phase: 
+
++++
+### Recommender system
+* Training Phase: 
+* Prediction Phase: 
+
+---
+### Next Steps
 
 * Example ML libraries to generate models, and make predictions
 * Look at a couple of sample algorithms, and how they work
 * What to do when predictions are incorrect (bias-vs-variance)
 
 ---
-
 ## More Sample Problems
 
 **Image recognition**
@@ -153,7 +181,6 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 
 
 +++
-
 **Predict house price**
 
 * https://www.kaggle.com/c/house-prices-advanced-regression-techniques
@@ -163,7 +190,6 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 ![Kaggle Image](https://kaggle2.blob.core.windows.net/competitions/kaggle/5407/media/housesbanner.png)
 
 +++
-
 **Fake News Detection**
 
 * https://www.kaggle.com/mrisdal/fake-news
@@ -171,7 +197,6 @@ Data > _Data Prep_ > ML Algorithm > _Model_ > _Deploy_ > _Predict_ > $$$  [4]
 * The latest hot topic in the news is fake news and many are wondering what data scientists can do to detect it and stymie its viral spread. T
 
 +++
-
 **Climate Analysis**
 
 * https://www.kaggle.com/cwiloc/climate-data-from-ocean-ships
