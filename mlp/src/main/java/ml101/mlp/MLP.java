@@ -1,6 +1,7 @@
 package ml101.mlp;
 
 import ml101.mlp.activation.ActivationFn;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Arrays;
 
@@ -61,14 +62,20 @@ public class MLP {
         }
     }
 
+    public void train() {
+        throw new NotImplementedException();
+    }
+
     /**
      * MLP configuration object.
      * Collects configuration info, then builds a MLP.
      */
-    public static class Config {
+    public static class Builder
+    {
         private ActivationFn activationFn;
         private int[] nodesPerLayer;
         private double[] rawWeights;
+        private double learningRate;
 
         public MLP build() {
             final int numLayers = nodesPerLayer.length - 1;
@@ -76,33 +83,60 @@ public class MLP {
             double[][] computeBuffer = new double[nodesPerLayer.length][];
             computeBuffer[0] = new double[nodesPerLayer[0] + 1];
             int start = 0;
-            for (int l = 0; l < nodesPerLayer.length - 1; l++) {
-                int rows = nodesPerLayer[l+1];
-                int cols = nodesPerLayer[l] + 1;
-                computeBuffer[l+1] = new double[rows+1];
-                weights[l] = new double[rows][];
-                for (int j = 0; j < rows; j++) {
-                    weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
-                    start += cols;
+            if (rawWeights != null) {
+                for (int l = 0; l < nodesPerLayer.length - 1; l++) {
+                    int rows = nodesPerLayer[l + 1];
+                    int cols = nodesPerLayer[l] + 1;
+                    computeBuffer[l + 1] = new double[rows + 1];
+                    weights[l] = new double[rows][];
+                    for (int j = 0; j < rows; j++) {
+                        weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
+                        start += cols;
+                    }
+                }
+            }
+            else {
+                for (int l = 0; l < nodesPerLayer.length - 1; l++) {
+                    int rows = nodesPerLayer[l + 1];
+                    int cols = nodesPerLayer[l] + 1;
+                    computeBuffer[l + 1] = new double[rows + 1];
+                    weights[l] = new double[rows][];
+                    for (int j = 0; j < rows; j++) {
+                        weights[l][j] = new double[cols];
+                        for (int i = 0; i < cols; i++) {
+                            weights[l][j][i] = Math.random();
+                            start += cols;
+                        }
+                    }
                 }
             }
             return new MLP(activationFn, weights, computeBuffer);
         }
 
-        public Config activation(final ActivationFn fn) {
+        public Builder activation(final ActivationFn fn) {
             this.activationFn = fn;
             return this;
         }
 
-        public MLP.Config layers(final int... nodesPerLayer) {
+        public Builder layers(final int... nodesPerLayer) {
             this.nodesPerLayer = nodesPerLayer;
             return this;
         }
 
-        public Config weights(double... weights) {
+        public Builder weights(double... weights) {
             this.rawWeights = weights;
             return this;
         }
 
+        public Builder randomWeights() {
+            this.rawWeights = null;
+            return this;
+        }
+
+        public Builder learningRate(double learningRate) {
+            this.learningRate = learningRate;
+            return this;
+        }
     }
+
 }
