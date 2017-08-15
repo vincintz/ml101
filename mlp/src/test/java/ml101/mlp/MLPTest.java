@@ -31,6 +31,7 @@ public class MLPTest {
                 .layers(2, 2, 1)
                 .randomWeights()
                 .learningRate(0.05)
+                .iterations(100)
                 .build();
         mlp.train();
         assertEquals(0.0, mlp.compute(0.0, 0.0)[1], DELTA);

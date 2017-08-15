@@ -50,12 +50,10 @@ public class MLP {
 
     private void displayWeights() {
         for (int l = 0; l < weights.length; l++) {
-            System.out.println("-----------");
             System.out.println("Layer " + (l+1));
-            System.out.println("-----------");
             for (int j = 0; j < weights[l].length; j++) {
                 for (int i = 0; i < weights[l][j].length; i++) {
-                    System.out.print(weights[l][j][i] + "  ");
+                    System.out.print("  " + weights[l][j][i]);
                 }
                 System.out.println();
             }
@@ -76,6 +74,7 @@ public class MLP {
         private int[] nodesPerLayer;
         private double[] rawWeights;
         private double learningRate;
+        private int iterations;
 
         public MLP build() {
             final int numLayers = nodesPerLayer.length - 1;
@@ -135,6 +134,11 @@ public class MLP {
 
         public Builder learningRate(double learningRate) {
             this.learningRate = learningRate;
+            return this;
+        }
+
+        public Builder iterations(int iterations) {
+            this.iterations = iterations;
             return this;
         }
     }
