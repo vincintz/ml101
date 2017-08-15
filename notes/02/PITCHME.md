@@ -136,15 +136,19 @@ private void multMatrixVector(
 ### To generalize:
 ![Picture of MLP](wala)
 
----
-### Learning stage
-
++++
 * But our XOR network was programmed
-  * we chose the weights to solve the problem
-* MLP algorithm to _learn_ the weights
+  * We chose the weights to solve the problem
+* We need an algorithm to _learn_ the weights
   * Backpropagation
-* We need to define the MLP network architecture
+* First, we need to define the MLP network architecture
   * Number of layers (2 in our example, not counting the input layer)
   * Number of nodes per layer
   * Activation function
 
++++
+* For learning, we also need a learning
+  * A _learning rate_
+  * Stopping criteria (_number of iterations_)
+  * Performance measure (remember _<P, M, T>_)
+    * Error/cost function 
