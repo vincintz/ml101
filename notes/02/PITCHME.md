@@ -106,6 +106,40 @@ public class LogisticFn implements ActivationFn {
 +++
 <img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/xor-mlp.png" width="80%">
 
++++
+<img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/feedforward1.png" width="80%">
+
++++
+```
+public double[] compute(double... inp) {
+  System.arraycopy(inp, 0, buffer[0], 1, inp.length);
+  for (int l = 0; l < weights.length; l++) {
+    buffer[l][0] = 1.0;
+    multMatrixVector(buffer[l+1], weights[l], buffer[l]);
+    activate(buffer[l+1]);
+  }
+  return buffer[weights.length];
+}
+```
+
++++
+```
+private void multMatrixVector(
+        double[] result,
+        double[][] mat,
+        double[] vector) {
+  for (int j = 0; j < mat.length; j++) {
+    result[j+1] = 0.0;
+    for (int i = 0; i < mat[j].length; i++) {
+      result[j+1] += vector[i] * mat[j][i];
+    }
+  }
+}
+```
+---
+### To generalize:
+![Picture of MLP](wala)
+
 ---
 ### Learning stage
 
