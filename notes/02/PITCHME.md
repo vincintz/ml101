@@ -53,15 +53,12 @@
 ```
 #### Step Function
 public class StepFn implements ActivationFn {
-  @Override
   public double compute(double z) {
     if (z < 0)
       return 0.0;
     else
       return 1.0;
   }
-
-  @Override
   public double derivative(double z) {
     throw new ArithmeticException(
           "StepFn does not support derivative");
@@ -72,12 +69,9 @@ public class StepFn implements ActivationFn {
 #### Logistic Function
 ```
 public class LogisticFn implements ActivationFn {
-  @Override
   public double compute(double z) {
     return 1.0 / (1.0 + Math.exp(-z));
   }
-
-  @Override
   public double derivative(double z) {
     double fz = compute(z);
     return fz * (1.0 - fz);
