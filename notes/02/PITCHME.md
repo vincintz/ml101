@@ -104,6 +104,7 @@ public class LogisticFn implements ActivationFn {
 <img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/feedforward1.png" width="80%">
 
 +++
+### Forward Computation
 ```
 public double[] compute(double... inp) {
   System.arraycopy(inp, 0, buffer[0], 1, inp.length);
@@ -117,15 +118,16 @@ public double[] compute(double... inp) {
 ```
 
 +++
+### Matrix-Vector Multiply
 ```
 private void multMatrixVector(
         double[] result,
-        double[][] mat,
+        double[][] matrix,
         double[] vector) {
-  for (int j = 0; j < mat.length; j++) {
+  for (int j = 0; j < matrix.length; j++) {
     result[j+1] = 0.0;
-    for (int i = 0; i < mat[j].length; i++) {
-      result[j+1] += vector[i] * mat[j][i];
+    for (int i = 0; i < matrix[j].length; i++) {
+      result[j+1] += vector[i] * matrix[j][i];
     }
   }
 }
