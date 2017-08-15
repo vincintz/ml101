@@ -50,8 +50,8 @@
 <img src="https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/dlogisticfn.png" width="80%">
 
 +++
-```
 #### Step Function
+```
 public class StepFn implements ActivationFn {
   public double compute(double z) {
     if (z < 0)
