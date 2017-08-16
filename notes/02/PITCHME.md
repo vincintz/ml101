@@ -152,3 +152,15 @@ private void multMatrixVector(
   * Stopping criteria (_number of iterations_)
   * Performance measure (remember _<P, M, T>_)
     * Error/cost function 
+
+---
+### Training Algorithm - Backpropagation
+
++++
+### Cost Function
+\begin{eqnarray}
+  C = \frac{1}{2n} \sum_x \|y(x)-a^L(x)\|^2
+\tag{26}\end{eqnarray}
+---
+### References
+* http://neuralnetworksanddeeplearning.com/chap2.html
