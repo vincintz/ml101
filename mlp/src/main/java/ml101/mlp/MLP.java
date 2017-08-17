@@ -1,16 +1,19 @@
 package ml101.mlp;
 
 import ml101.mlp.activation.ActivationFn;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Arrays;
 
-public class MLP {
-    final private ActivationFn activationFn;
-    final private double[][][] weights;
-    final private double[][] computeBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    MLP(final ActivationFn activationFn, final double[][][] weights, final double[][] computeBuffer) {
+public class MLP {
+    private final static Logger logger = LoggerFactory.getLogger(MLP.class);
+    private final ActivationFn activationFn;
+    private final double[][][] weights;
+    private final double[][] computeBuffer;
+
+    private MLP(final ActivationFn activationFn, final double[][][] weights, final double[][] computeBuffer) {
         this.activationFn  = activationFn;
         this.weights       = weights;
         this.computeBuffer = computeBuffer;
@@ -50,18 +53,20 @@ public class MLP {
 
     private void displayWeights() {
         for (int l = 0; l < weights.length; l++) {
-            System.out.println("Layer " + (l+1));
+            logger.info("Layer " + (l+1));
             for (int j = 0; j < weights[l].length; j++) {
+                final StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < weights[l][j].length; i++) {
-                    System.out.print("  " + weights[l][j][i]);
+                    builder.append("  ")
+                           .append(weights[l][j][i]);
                 }
-                System.out.println();
+                logger.info(builder.toString());
             }
         }
     }
 
     public void train() {
-        throw new NotImplementedException();
+        //throw new UnsupportedOperationException();
     }
 
     /**
