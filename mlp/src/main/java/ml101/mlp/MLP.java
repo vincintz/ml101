@@ -12,12 +12,57 @@ public class MLP {
     private final ActivationFn activationFn;
     private final double[][][] weights;
     private final double[][] computeBuffer;
+    private final double[][][] computeWeights;
 
-    private MLP(final ActivationFn activationFn, final double[][][] weights, final double[][] computeBuffer) {
+    private MLP(final ActivationFn activationFn, double[] rawWeights, int... nodesPerLayer) {
+        final int numLayers = nodesPerLayer.length - 1;
+        double[][][] weights = new double[numLayers][][];
+        double[][] computeBuffer = new double[nodesPerLayer.length][];
+        computeBuffer[0] = new double[nodesPerLayer[0] + 1];
+        int start = 0;
+        for (int l = 0; l < nodesPerLayer.length - 1; l++) {
+            int rows = nodesPerLayer[l + 1];
+            int cols = nodesPerLayer[l] + 1;
+            computeBuffer[l + 1] = new double[rows + 1];
+            weights[l] = new double[rows][];
+            for (int j = 0; j < rows; j++) {
+                weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
+                start += cols;
+            }
+        }
+        this.activationFn   = activationFn;
+        this.weights        = weights;
+        this.computeBuffer  = computeBuffer;
+        this.computeWeights = null;
+        displayWeights();
+    }
+
+    private MLP(final ActivationFn activationFn, int... nodesPerLayer) {
+        final int numLayers = nodesPerLayer.length - 1;
+        double[][][] weights = new double[numLayers][][];
+        double[][] computeBuffer = new double[nodesPerLayer.length][];
+        double[][][] computeWeights = new double[numLayers][][];
+        computeBuffer[0] = new double[nodesPerLayer[0] + 1];
+        int start = 0;
+        for (int l = 0; l < nodesPerLayer.length - 1; l++) {
+            int rows = nodesPerLayer[l + 1];
+            int cols = nodesPerLayer[l] + 1;
+            computeBuffer[l + 1] = new double[rows + 1];
+            weights[l] = new double[rows][];
+            computeWeights[l] = new double[rows][];
+            for (int j = 0; j < rows; j++) {
+                weights[l][j] = new double[cols];
+                computeWeights[l][j] = new double[cols];
+                for (int i = 0; i < cols; i++) {
+                    weights[l][j][i] = Math.random();
+                    start += cols;
+                }
+            }
+        }
         this.activationFn  = activationFn;
         this.weights       = weights;
         this.computeBuffer = computeBuffer;
-        displayWeights();
+        this.computeWeights = computeWeights;
     }
 
     public double[] compute(double... input) {
@@ -82,39 +127,12 @@ public class MLP {
         private int iterations;
 
         public MLP build() {
-            final int numLayers = nodesPerLayer.length - 1;
-            double[][][] weights = new double[numLayers][][];
-            double[][] computeBuffer = new double[nodesPerLayer.length][];
-            computeBuffer[0] = new double[nodesPerLayer[0] + 1];
-            int start = 0;
             if (rawWeights != null) {
-                for (int l = 0; l < nodesPerLayer.length - 1; l++) {
-                    int rows = nodesPerLayer[l + 1];
-                    int cols = nodesPerLayer[l] + 1;
-                    computeBuffer[l + 1] = new double[rows + 1];
-                    weights[l] = new double[rows][];
-                    for (int j = 0; j < rows; j++) {
-                        weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
-                        start += cols;
-                    }
-                }
+                return new MLP(activationFn, rawWeights, nodesPerLayer);
             }
             else {
-                for (int l = 0; l < nodesPerLayer.length - 1; l++) {
-                    int rows = nodesPerLayer[l + 1];
-                    int cols = nodesPerLayer[l] + 1;
-                    computeBuffer[l + 1] = new double[rows + 1];
-                    weights[l] = new double[rows][];
-                    for (int j = 0; j < rows; j++) {
-                        weights[l][j] = new double[cols];
-                        for (int i = 0; i < cols; i++) {
-                            weights[l][j][i] = Math.random();
-                            start += cols;
-                        }
-                    }
-                }
+                return new MLP(activationFn, nodesPerLayer);
             }
-            return new MLP(activationFn, weights, computeBuffer);
         }
 
         public Builder activation(final ActivationFn fn) {
