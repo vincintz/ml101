@@ -31,9 +31,17 @@ public class MLPTest {
                 .layers(2, 2, 1)
                 .randomWeights()
                 .learningRate(0.05)
-                .iterations(100)
+                .epochs(100)
                 .build();
-        mlp.train();
+        mlp.train(
+                new double[][] {{0.0, 0.0},
+                                {0.0, 1.0},
+                                {1.0, 0.0},
+                                {1.0, 1.0}},
+                new double[][] {{0.0},
+                                {1.0},
+                                {1.0},
+                                {0.0}});
         assertEquals(0.0, mlp.compute(0.0, 0.0)[1], DELTA);
         assertEquals(1.0, mlp.compute(0.0, 1.0)[1], DELTA);
         assertEquals(1.0, mlp.compute(1.0, 0.0)[1], DELTA);
