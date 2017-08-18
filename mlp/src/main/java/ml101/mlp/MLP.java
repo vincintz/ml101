@@ -62,21 +62,6 @@ public class MLP {
         displayWeights();
     }
 
-    // Setter
-    private void activationFn(final ActivationFn activationFn) {
-        this.activationFn = activationFn;
-    }
-
-    // Setter
-    private void epochs(final int epochs) {
-        this.epochs = epochs;
-    }
-
-    // Setter
-    private void learningRate(final double learningRate) {
-        this.learningRate = learningRate;
-    }
-
     /**
      * Feed forward computation
      */
@@ -116,25 +101,28 @@ public class MLP {
      * Trains the network using batch back-propagation
      */
     public void train(final double[][] x, final double[][] y) {
-        double[][][] deltaWeights = clone(weights);
+        double[][][] deltaWeights = zerosFrom(weights);
+        double[][] deltaBias = zerosFrom(bias);
         for (int ep = 0; ep < epochs; ep++) {
-            deltaWeights = backprop(deltaWeights, x, y);
+            doBatchBackprop(deltaWeights, deltaBias, x, y);
             updateWeights(deltaWeights);
+            updateBias(deltaBias);
         }
     }
 
     /**
      * Performs one batch of back propagation
-     * @return Returns the total change in weight
      */
-    private double[][][] backprop(final double[][][] deltaWeights, final double[][] x, final double[][] y) {
+    private void doBatchBackprop(double[][][] deltaWeights,
+                                 double[][] deltaBias,
+                                 final double[][] x,
+                                 final double[][] y) {
         for (int n = 0; n < x.length; n++) {
             double[] h = compute(x[n]);
             double cost = cost(h, y[n]);
             logger.info("cost: {}", cost);
             //throw new UnsupportedOperationException();
         }
-        return deltaWeights;
     }
 
     private double cost(double[] h, double[] y) {
@@ -150,8 +138,15 @@ public class MLP {
             for (int j = 0; j < weights[k].length; j++) {
                 for (int i = 0; i < weights[k][j].length; i++) {
                     weights[k][j][i] += deltaWeights[k][j][i];
-                    deltaWeights[k][j][i] = 0.0d;
                 }
+            }
+        }
+    }
+
+    private void updateBias(double[][] deltaBias) {
+        for (int k = 0; k < bias.length; k++) {
+            for (int j = 0; j < bias[k].length; j++) {
+                bias[k][j] += deltaBias[k][j];
             }
         }
     }
@@ -166,12 +161,26 @@ public class MLP {
         }
     }
 
-    private double[][][] clone(double[][][] weights) {
-        double[][][] zeros = new double[weights.length][][];
-        for (int l = 0; l < weights.length; l++) {
-            zeros[l] = new double[weights[0].length][];
-            for (int j = 0; j < weights[0].length; j++) {
-                zeros[l][j] = new double[weights[0][0].length];
+    private double[][][] zerosFrom(double[][][] shape) {
+        double[][][] zeros = new double[shape.length][][];
+        for (int l = 0; l < shape.length; l++) {
+            zeros[l] = new double[shape[l].length][];
+            for (int j = 0; j < shape[l].length; j++) {
+                zeros[l][j] = new double[shape[l][j].length];
+                for (int i = 0; i < shape[l][j].length; i++) {
+                    zeros[l][j][i] = 0.0d;
+                }
+            }
+        }
+        return zeros;
+    }
+
+    private double[][] zerosFrom(double[][] shape) {
+        double[][] zeros = new double[shape.length][];
+        for (int l = 0; l < shape.length; l++) {
+            zeros[l] = new double[shape[l].length];
+            for (int j = 0; j < shape[l].length; j++) {
+                zeros[l][j] = 0.0d;
             }
         }
         return zeros;
@@ -213,9 +222,9 @@ public class MLP {
             else {
                 mlp = new MLP(nodesPerLayer);
             }
-            mlp.activationFn(activationFn);
-            mlp.learningRate(learningRate);
-            mlp.epochs(epochs);
+            mlp.activationFn = activationFn;
+            mlp.learningRate = learningRate;
+            mlp.epochs = epochs;
             return mlp;
         }
 
