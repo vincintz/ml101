@@ -79,8 +79,6 @@ public class MLP {
 
     /**
      * Feed forward computation
-     * @param input Input to the MLP
-     * @return Returns the MLP output
      */
     public double[] compute(double... input) {
         System.arraycopy(input, 0, outputValues[0], 0, input.length);
@@ -93,10 +91,7 @@ public class MLP {
     }
 
     /**
-     * Cross Multiply a Matrix with a Vector. Pass the array to store the result in.
-     * @param result where to store the result
-     * @param matrix the Matrix
-     * @param vector the Vector
+     * Cross Multiply a Matrix with a Vector.
      */
     private void crossMultiply(double[] result, double[][] matrix, double[] vector) {
         for (int j = 0; j < matrix.length; j++) {
@@ -107,6 +102,9 @@ public class MLP {
         }
     }
 
+    /**
+     * Adds two vectors.
+     */
     private void vectorAdd(double[] result, double[] v1, double[] v2) {
         int length = Math.min(v1.length, v2.length);
         for (int i = 0; i < length; i++) {
@@ -125,6 +123,10 @@ public class MLP {
         }
     }
 
+    /**
+     * Performs one batch of back propagation
+     * @return Returns the total change in weight
+     */
     private double[][][] backprop(final double[][][] deltaWeights, final double[][] x, final double[][] y) {
         for (int n = 0; n < x.length; n++) {
             double[] h = compute(x[n]);
