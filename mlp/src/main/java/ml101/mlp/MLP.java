@@ -36,7 +36,7 @@ public class MLP {
                 start += cols;
             }
         }
-        displayWeights();
+        displayWeightsAndBias();
     }
 
     private MLP(int... nodesPerLayer) {
@@ -55,11 +55,11 @@ public class MLP {
                 bias[l][j] = Math.random();
                 weights[l][j] = new double[cols];
                 for (int i = 0; i < cols; i++) {
-                    weights[l][j][i] = 0.0;
+                    weights[l][j][i] = Math.random();
                 }
             }
         }
-        displayWeights();
+        displayWeightsAndBias();
     }
 
     /**
@@ -105,9 +105,9 @@ public class MLP {
         double[][] deltaBias = zerosFrom(bias);
         for (int ep = 0; ep < epochs; ep++) {
             doBatchBackprop(deltaWeights, deltaBias, x, y);
-            updateWeights(deltaWeights);
-            updateBias(deltaBias);
+            updateWeightsAndBias(deltaWeights, deltaBias);
         }
+        displayWeightsAndBias();
     }
 
     /**
@@ -133,19 +133,12 @@ public class MLP {
         return (1.0 / 2.0*y.length) * sumSq;
     }
 
-    private void updateWeights(double[][][] deltaWeights) {
+    private void updateWeightsAndBias(double[][][] deltaWeights, double[][] deltaBias) {
         for (int k = 0; k < weights.length; k++) {
             for (int j = 0; j < weights[k].length; j++) {
                 for (int i = 0; i < weights[k][j].length; i++) {
                     weights[k][j][i] += deltaWeights[k][j][i];
                 }
-            }
-        }
-    }
-
-    private void updateBias(double[][] deltaBias) {
-        for (int k = 0; k < bias.length; k++) {
-            for (int j = 0; j < bias[k].length; j++) {
                 bias[k][j] += deltaBias[k][j];
             }
         }
@@ -186,7 +179,7 @@ public class MLP {
         return zeros;
     }
 
-    private void displayWeights() {
+    private void displayWeightsAndBias() {
         for (int l = 0; l < weights.length; l++) {
             logger.info("Layer " + (l+1));
             for (int j = 0; j < weights[l].length; j++) {
