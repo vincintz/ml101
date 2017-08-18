@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 public class MLP {
     private final static Logger logger = LoggerFactory.getLogger(MLP.class);
     private double[][][] weights;
+    private double[][] bias;
     private ActivationFn activationFn;
     private double learningRate;
     private int epochs;
@@ -19,15 +20,18 @@ public class MLP {
     private MLP(double[] rawWeights, int... nodesPerLayer) {
         final int numLayers = nodesPerLayer.length - 1;
         weights = new double[numLayers][][];
+        bias = new double[numLayers][];
         outputValues = new double[nodesPerLayer.length][];
-        outputValues[0] = new double[nodesPerLayer[0] + 1];
+        outputValues[0] = new double[nodesPerLayer[0]];
         int start = 0;
         for (int l = 0; l < nodesPerLayer.length - 1; l++) {
             int rows = nodesPerLayer[l + 1];
-            int cols = nodesPerLayer[l] + 1;
-            outputValues[l + 1] = new double[rows + 1];
+            int cols = nodesPerLayer[l];
+            outputValues[l + 1] = new double[rows];
             weights[l] = new double[rows][];
+            bias[l] = new double[cols];
             for (int j = 0; j < rows; j++) {
+                bias[l][j] = rawWeights[start++];
                 weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
                 start += cols;
             }
@@ -37,25 +41,25 @@ public class MLP {
 
     private MLP(int... nodesPerLayer) {
         final int numLayers = nodesPerLayer.length - 1;
-        double[][][] weights = new double[numLayers][][];
-        double[][] outputValues = new double[nodesPerLayer.length][];
-        outputValues[0] = new double[nodesPerLayer[0] + 1];
-        int start = 0;
+        weights = new double[numLayers][][];
+        bias = new double[numLayers][];
+        outputValues = new double[nodesPerLayer.length][];
+        outputValues[0] = new double[nodesPerLayer[0]];
         for (int l = 0; l < nodesPerLayer.length - 1; l++) {
             int rows = nodesPerLayer[l + 1];
-            int cols = nodesPerLayer[l] + 1;
-            outputValues[l + 1] = new double[rows + 1];
+            int cols = nodesPerLayer[l];
+            outputValues[l + 1] = new double[rows];
             weights[l] = new double[rows][];
+            bias[l] = new double[cols];
             for (int j = 0; j < rows; j++) {
+                bias[l][j] = Math.random();
                 weights[l][j] = new double[cols];
                 for (int i = 0; i < cols; i++) {
-                    weights[l][j][i] = Math.random();
-                    start += cols;
+                    weights[l][j][i] = 0.0;
                 }
             }
         }
-        this.weights      = weights;
-        this.outputValues = outputValues;
+        displayWeights();
     }
 
     // Setter
@@ -79,11 +83,10 @@ public class MLP {
      * @return Returns the MLP output
      */
     public double[] compute(double... input) {
-        clear(outputValues);
-        System.arraycopy(input, 0, outputValues[0], 1, input.length);
+        System.arraycopy(input, 0, outputValues[0], 0, input.length);
         for (int l = 0; l < weights.length; l++) {
-            outputValues[l][0] = 1.0;
-            multiplyMatrixVector(outputValues[l+1], weights[l], outputValues[l]);
+            crossMultiply(outputValues[l+1], weights[l], outputValues[l]);
+            vectorAdd(outputValues[l+1], outputValues[l+1], bias[l]);
             activate(outputValues[l+1]);
         }
         return outputValues[weights.length];
@@ -95,12 +98,19 @@ public class MLP {
      * @param matrix the Matrix
      * @param vector the Vector
      */
-    private void multiplyMatrixVector(double[] result, double[][] matrix, double[] vector) {
+    private void crossMultiply(double[] result, double[][] matrix, double[] vector) {
         for (int j = 0; j < matrix.length; j++) {
-            result[j+1] = 0.0;
+            result[j] = 0.0;
             for (int i = 0; i < matrix[j].length; i++) {
-                result[j+1] += vector[i] * matrix[j][i];
+                result[j] += vector[i] * matrix[j][i];
             }
+        }
+    }
+
+    private void vectorAdd(double[] result, double[] v1, double[] v2) {
+        int length = Math.min(v1.length, v2.length);
+        for (int i = 0; i < length; i++) {
+            result[i] = v1[i] + v2[i];
         }
     }
 
@@ -128,7 +138,7 @@ public class MLP {
     private double cost(double[] h, double[] y) {
         double sumSq = 0.0;
         for (int i = 0; i < y.length; i++) {
-            sumSq += Math.pow(h[i+1] - y[i], 2);
+            sumSq += Math.pow(h[i] - y[i], 2);
         }
         return (1.0 / 2.0*y.length) * sumSq;
     }
@@ -165,19 +175,13 @@ public class MLP {
         return zeros;
     }
 
-    private void clear(double[][] buffer) {
-        for (int j = 0; j < buffer.length; j++) {
-            for (int i = 0; i < buffer[j].length; i++) {
-                buffer[j][i] = 0.0d;
-            }
-        }
-    }
-
     private void displayWeights() {
         for (int l = 0; l < weights.length; l++) {
             logger.info("Layer " + (l+1));
             for (int j = 0; j < weights[l].length; j++) {
                 final StringBuilder builder = new StringBuilder();
+                builder.append("  ")
+                        .append(bias[l][j]);
                 for (int i = 0; i < weights[l][j].length; i++) {
                     builder.append("  ")
                             .append(weights[l][j][i]);
