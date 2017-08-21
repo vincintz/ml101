@@ -155,7 +155,6 @@ public static void vectorAdd(double[] result,
 * But our XOR network was programmed
   * We chose the weights to solve the problem
 * We need an algorithm to _learn_ the weights
-  * Backpropagation
 * First, we need to define the MLP network architecture
   * Number of layers (2 in our example, not counting the input layer)
   * Number of nodes per layer
@@ -167,27 +166,6 @@ public static void vectorAdd(double[] result,
   * Stopping criteria (_number of iterations_)
   * Performance measure (remember _<P, M, T>_)
     * Error/cost function 
-
----
-### Training Algorithm
-
-* Run forward computation
-* Compute difference between expected output and forward computation output
-* Update the weights to minimize the difference
-* Repeat the above steps
-
-+++
-### We need to implement the following
-* Forward computation
-* Cost/error function (for the outplut layer and the hidden layer/s)
-* Strategy for updating the weights
-* Stopping criteria
-
----
-### Back-propagation
-
-Backpropagation is a method used in artificial neural networks to calculate the error contribution of each neuron after
-a batch of data (in image recognition, multiple images) is processed
 
 ---
 ### Sample API
@@ -225,6 +203,27 @@ mlp.train(
         assertEquals(1.0, mlp.compute(1.0, 0.0)[0], DELTA);
         assertEquals(0.0, mlp.compute(1.0, 1.0)[0], DELTA);
 ```
+
+---
+### Training Algorithm
+
+* Run forward computation
+* Compute difference between expected output and forward computation output
+* Update the weights to minimize the difference
+* Repeat the above steps
+
++++
+### We need to implement the following
+* Forward computation
+* Cost/error function (for the outplut layer and the hidden layer/s)
+* Strategy for updating the weights
+* Stopping criteria
+
+---
+### Back-propagation
+
+Backpropagation is a method used in artificial neural networks to calculate the error contribution of each neuron after
+a batch of data (in image recognition, multiple images) is processed
 
 ---
 ### Train
