@@ -239,6 +239,17 @@ for (int ep = 0; ep < epochs; ep++) {
 }
 ```
 ---
+### Next Step
+
+* Possible improvements
+  * regularization
+  * momentum
+* Real world application
+* Troubleshooting
+  * parameters
+  * bias vs variance
+
+---
 ### References
 * https://en.wikipedia.org/wiki/Multilayer_perceptron
 * http://neuralnetworksanddeeplearning.com/chap2.html
