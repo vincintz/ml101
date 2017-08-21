@@ -1,5 +1,5 @@
 # Machine Learning 101
-## Multilayer perceptron (MLP)
+## Multilayer Perceptron (MLP)
 
 ---
 ## Definition of Terms
@@ -106,35 +106,50 @@ public class LogisticFn implements ActivationFn {
 +++
 ### Forward Computation
 ```
-public double[] compute(double... inp) {
-  System.arraycopy(inp, 0, buffer[0], 1, inp.length);
+// Feed forward computation
+private double[] feedForward(final double[][] outputValues,
+                             double... input) {
+  System.arraycopy(input, 0, outputValues[0], 0, input.length);
   for (int l = 0; l < weights.length; l++) {
-    buffer[l][0] = 1.0;
-    multMatrixVector(buffer[l+1], weights[l], buffer[l]);
-    activate(buffer[l+1]);
+    crossMultiply(outputValues[l+1], weights[l], outputValues[l]);
+    vectorAdd(outputValues[l+1], outputValues[l+1], bias[l]);
+    activate(outputValues[l+1], activationFn);
   }
-  return buffer[weights.length];
+  return outputValues[weights.length];
 }
 ```
 
 +++
 ### Matrix-Vector Multiply
 ```
-private void multMatrixVector(
-        double[] result,
-        double[][] matrix,
-        double[] vector) {
+public static void crossMultiply(double[]   result,
+                                 double[][] matrix,
+                                 double[]   vector) {
   for (int j = 0; j < matrix.length; j++) {
-    result[j+1] = 0.0;
+    result[j] = 0.0;
     for (int i = 0; i < matrix[j].length; i++) {
-      result[j+1] += vector[i] * matrix[j][i];
+      result[j] += vector[i] * matrix[j][i];
     }
   }
 }
 ```
+
++++
+### Matrix-Vector Multiply
+```
+public static void vectorAdd(double[] result,
+                             double[] v1,
+                             double[] v2) {
+  int length = Math.min(v1.length, v2.length);
+  for (int i = 0; i < length; i++) {
+    result[i] = v1[i] + v2[i];
+  }
+}
+```
+
 ---
 ### To generalize:
-![Picture of MLP](wala)
+![Picture of MLP](http://www.cse.unsw.edu.au/~cs9417ml/MLP2/BPNeuralNetwork.jpg)
 
 +++
 * But our XOR network was programmed
@@ -154,14 +169,78 @@ private void multMatrixVector(
     * Error/cost function 
 
 ---
-### Training Algorithm - Backpropagation
+### Training Algorithm
+
+* Run forward computation
+* Compute difference between expected output and forward computation output
+* Update the weights to minimize the difference
+* Repeat the above steps
 
 +++
-### Cost Function
-\begin{eqnarray}
-  C = \frac{1}{2n} \sum_x \|y(x)-a^L(x)\|^2
-\tag{26}\end{eqnarray}
+### We need to implement the following
+* Forward computation
+* Cost/error function (for the outplut layer and the hidden layer/s)
+* Strategy for updating the weights
+* Stopping criteria
+
+---
+### Back-propagation
+
+Backpropagation is a method used in artificial neural networks to calculate the error contribution of each neuron after
+a batch of data (in image recognition, multiple images) is processed
+
+---
+### Sample API
+#### Instantiate
+```
+final MLP mlp =
+        new MLP.Builder()
+               .activation(new LogisticFn())
+               .layers(2, 2, 1)
+               .randomWeights()
+               .learningRate(0.05)
+               .epochs(1000000)
+               .build();
+```
+
++++
+#### Train
+```
+mlp.train(
+        new double[][] {{0.0, 0.0},
+                        {0.0, 1.0},
+                        {1.0, 0.0},
+                        {1.0, 1.0}},
+        new double[][] {{0.0},
+                        {1.0},
+                        {1.0},
+                        {0.0}});
+```
+
++++
+#### Use
+```
+        assertEquals(0.0, mlp.compute(0.0, 0.0)[0], DELTA);
+        assertEquals(1.0, mlp.compute(0.0, 1.0)[0], DELTA);
+        assertEquals(1.0, mlp.compute(1.0, 0.0)[0], DELTA);
+        assertEquals(0.0, mlp.compute(1.0, 1.0)[0], DELTA);
+```
+
+---
+### Train
+```
+for (int ep = 0; ep < epochs; ep++) {
+    double totalSumSquareError = doBatchBackProp(outputValues, errorValues,
+                                                 deltaWeights, deltaBias,
+                                                 input, expected);
+    updateWeightsAndBias(deltaWeights, deltaBias);
+    if (ep % 1000 == 0) {
+        logger.info("{} : {}", ep, totalSumSquareError);
+    }
+}
+```
 ---
 ### References
+* https://en.wikipedia.org/wiki/Multilayer_perceptron
 * http://neuralnetworksanddeeplearning.com/chap2.html
 * http://www.cse.unsw.edu.au/~cs9417ml/MLP2/

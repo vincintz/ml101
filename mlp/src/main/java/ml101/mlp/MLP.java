@@ -48,24 +48,12 @@ public class MLP {
         double[][][] deltaWeights  = zerosFrom(weights);
         double[][]   deltaBias     = zerosFrom(bias);
         for (int ep = 0; ep < epochs; ep++) {
-            clear(deltaWeights, deltaBias);
-            double sse = doBatchBackProp(outputValues, errorValues,
-                                         deltaWeights, deltaBias,
-                                         input, expected);
+            double totalSumSquareError = doBatchBackProp(outputValues, errorValues,
+                                                         deltaWeights, deltaBias,
+                                                         input, expected);
             updateWeightsAndBias(deltaWeights, deltaBias);
             if (ep % 1000 == 0) {
-                logger.info("{} : {}", ep, sse);
-            }
-        }
-    }
-
-    private void clear(double[][][] deltaWeights, double[][] deltaBias) {
-        for (int l = 0; l < deltaWeights.length; l++) {
-            for (int j = 0; j < deltaWeights[l].length; j++) {
-                deltaBias[l][j] = 0.0;
-                for (int i = 0; i < deltaWeights[l][j].length; i++) {
-                    deltaWeights[l][j][i] = 0.0;
-                }
+                logger.info("{} : {}", ep, totalSumSquareError);
             }
         }
     }
@@ -77,13 +65,13 @@ public class MLP {
                                  double[][]   deltaBias,
                                  double[][]   input,
                                  double[][]   expected) {
-        double sumSquareError = 0.0;
+        double totalSumSquareError = 0.0;
         for (int n = 0; n < input.length; n++) {
             feedForward(outputValues, input[n]);
-            sumSquareError += backPropagateErrors(errorValues, outputValues, expected[n]);
+            totalSumSquareError += backPropagateErrors(errorValues, outputValues, expected[n]);
             incrementDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
         }
-        return sumSquareError;
+        return totalSumSquareError;
     }
 
     private double backPropagateErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
@@ -134,8 +122,10 @@ public class MLP {
             for (int j = 0; j < weights[k].length; j++) {
                 for (int i = 0; i < weights[k][j].length; i++) {
                     weights[k][j][i] += deltaWeights[k][j][i];
+                    deltaWeights[k][j][i] = 0.0;
                 }
                 bias[k][j] += deltaBias[k][j];
+                deltaBias[k][j] = 0.0;
             }
         }
     }
