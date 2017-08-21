@@ -7,6 +7,10 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static ml101.mlp.math.NumUtilities.crossMultiply;
+import static ml101.mlp.math.NumUtilities.vectorAdd;
+import static ml101.mlp.math.NumUtilities.zerosFrom;
+
 public class MLP {
     private final static Logger logger = LoggerFactory.getLogger(MLP.class);
     private double[][][] weights;
@@ -14,20 +18,16 @@ public class MLP {
     private ActivationFn activationFn;
     private double learningRate;
     private int epochs;
-    // buffer to store the intermediate computation results per layer
-    private double[][] outputValues;
 
-    private MLP(double[] rawWeights, int... nodesPerLayer) {
+    // Initialize network weights from input array
+    private void initializeWeights(double[] rawWeights, int... nodesPerLayer) {
         final int numLayers = nodesPerLayer.length - 1;
         weights = new double[numLayers][][];
         bias = new double[numLayers][];
-        outputValues = new double[nodesPerLayer.length][];
-        outputValues[0] = new double[nodesPerLayer[0]];
         int start = 0;
         for (int l = 0; l < nodesPerLayer.length - 1; l++) {
             int rows = nodesPerLayer[l + 1];
             int cols = nodesPerLayer[l];
-            outputValues[l + 1] = new double[rows];
             weights[l] = new double[rows][];
             bias[l] = new double[cols];
             for (int j = 0; j < rows; j++) {
@@ -39,16 +39,14 @@ public class MLP {
         displayWeightsAndBias();
     }
 
-    private MLP(int... nodesPerLayer) {
+    //  Initialize network weights with random values
+    private void initializeWeights(int... nodesPerLayer) {
         final int numLayers = nodesPerLayer.length - 1;
         weights = new double[numLayers][][];
         bias = new double[numLayers][];
-        outputValues = new double[nodesPerLayer.length][];
-        outputValues[0] = new double[nodesPerLayer[0]];
         for (int l = 0; l < nodesPerLayer.length - 1; l++) {
             int rows = nodesPerLayer[l + 1];
             int cols = nodesPerLayer[l];
-            outputValues[l + 1] = new double[rows];
             weights[l] = new double[rows][];
             bias[l] = new double[cols];
             for (int j = 0; j < rows; j++) {
@@ -66,6 +64,12 @@ public class MLP {
      * Feed forward computation
      */
     public double[] compute(double... input) {
+        final double[][] outputValues = createComputationBuffer(weights);
+        return compute(outputValues, input);
+    }
+
+    // Feed forward computation
+    private double[] compute(final double[][] outputValues, double... input) {
         System.arraycopy(input, 0, outputValues[0], 0, input.length);
         for (int l = 0; l < weights.length; l++) {
             crossMultiply(outputValues[l+1], weights[l], outputValues[l]);
@@ -73,28 +77,6 @@ public class MLP {
             activate(outputValues[l+1]);
         }
         return outputValues[weights.length];
-    }
-
-    /**
-     * Cross Multiply a Matrix with a Vector.
-     */
-    private void crossMultiply(double[] result, double[][] matrix, double[] vector) {
-        for (int j = 0; j < matrix.length; j++) {
-            result[j] = 0.0;
-            for (int i = 0; i < matrix[j].length; i++) {
-                result[j] += vector[i] * matrix[j][i];
-            }
-        }
-    }
-
-    /**
-     * Adds two vectors.
-     */
-    private void vectorAdd(double[] result, double[] v1, double[] v2) {
-        int length = Math.min(v1.length, v2.length);
-        for (int i = 0; i < length; i++) {
-            result[i] = v1[i] + v2[i];
-        }
     }
 
     /**
@@ -154,29 +136,15 @@ public class MLP {
         }
     }
 
-    private double[][][] zerosFrom(double[][][] shape) {
-        double[][][] zeros = new double[shape.length][][];
-        for (int l = 0; l < shape.length; l++) {
-            zeros[l] = new double[shape[l].length][];
-            for (int j = 0; j < shape[l].length; j++) {
-                zeros[l][j] = new double[shape[l][j].length];
-                for (int i = 0; i < shape[l][j].length; i++) {
-                    zeros[l][j][i] = 0.0d;
-                }
-            }
+    // Creates output values of each neuron to avoid multiple calls to new
+    private double[][] createComputationBuffer(double[][][] weights) {
+        final int layers = weights.length;
+        double[][] outputValues = new double[layers+1][];
+        outputValues[0] = new double[weights[0][0].length];
+        for (int l = 0; l < layers; l++) {
+            outputValues[l+1] = new double[weights[l].length];
         }
-        return zeros;
-    }
-
-    private double[][] zerosFrom(double[][] shape) {
-        double[][] zeros = new double[shape.length][];
-        for (int l = 0; l < shape.length; l++) {
-            zeros[l] = new double[shape[l].length];
-            for (int j = 0; j < shape[l].length; j++) {
-                zeros[l][j] = 0.0d;
-            }
-        }
-        return zeros;
+        return outputValues;
     }
 
     private void displayWeightsAndBias() {
@@ -209,15 +177,16 @@ public class MLP {
 
         public MLP build() {
             final MLP mlp;
-            if (rawWeights != null) {
-                mlp = new MLP(rawWeights, nodesPerLayer);
-            }
-            else {
-                mlp = new MLP(nodesPerLayer);
-            }
+            mlp = new MLP();
             mlp.activationFn = activationFn;
             mlp.learningRate = learningRate;
             mlp.epochs = epochs;
+            if (rawWeights != null) {
+                mlp.initializeWeights(rawWeights, nodesPerLayer);
+            }
+            else {
+                mlp.initializeWeights(nodesPerLayer);
+            }
             return mlp;
         }
 
