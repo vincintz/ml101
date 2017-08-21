@@ -241,12 +241,17 @@ for (int ep = 0; ep < epochs; ep++) {
 ---
 ### Next Step
 
+* Back-propagation intuition
+  * Error function over time (epoch)
 * Possible improvements
+  * math libraries
   * regularization
   * momentum
+  * Batch vs SGD vs mixed
 * Real world application
+  * preparing the data
 * Troubleshooting
-  * parameters
+  * tuning the parameters
   * bias vs variance
 
 ---

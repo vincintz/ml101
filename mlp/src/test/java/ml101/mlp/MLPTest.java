@@ -25,13 +25,13 @@ public class MLPTest {
     }
 
     @Test
-    public void shouldWorkWithTrainedConfiguredXOR() {
+    public void shouldWorkWithTrainedXOR() {
         final MLP mlp = new MLP.Builder()
                 .activation(new LogisticFn())
                 .layers(2, 2, 1)
                 .randomWeights()
-                .learningRate(0.05)
-                .epochs(1000000)
+                .learningRate(0.10)
+                .epochs(500000)
                 .build();
         mlp.train(
                 new double[][] {{0.0, 0.0},
