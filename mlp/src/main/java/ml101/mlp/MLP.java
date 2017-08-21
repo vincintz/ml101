@@ -25,11 +25,11 @@ public class MLP {
      */
     public double[] compute(double... input) {
         final double[][] outputValues = createComputationBuffer(weights);
-        return compute(outputValues, input);
+        return feedForward(outputValues, input);
     }
 
     // Feed forward computation
-    private double[] compute(final double[][] outputValues, double... input) {
+    private double[] feedForward(final double[][] outputValues, double... input) {
         System.arraycopy(input, 0, outputValues[0], 0, input.length);
         for (int l = 0; l < weights.length; l++) {
             crossMultiply(outputValues[l+1], weights[l], outputValues[l]);
@@ -48,38 +48,54 @@ public class MLP {
         double[][][] deltaWeights  = zerosFrom(weights);
         double[][]   deltaBias     = zerosFrom(bias);
         for (int ep = 0; ep < epochs; ep++) {
-            doBatchBackprop(outputValues, errorValues,
-                            deltaWeights, deltaBias,
-                            input, expected);
+            clear(deltaWeights, deltaBias);
+            double sse = doBatchBackProp(outputValues, errorValues,
+                                         deltaWeights, deltaBias,
+                                         input, expected);
             updateWeightsAndBias(deltaWeights, deltaBias);
+            if (ep % 1000 == 0) {
+                logger.info("{} : {}", ep, sse);
+            }
+        }
+    }
+
+    private void clear(double[][][] deltaWeights, double[][] deltaBias) {
+        for (int l = 0; l < deltaWeights.length; l++) {
+            for (int j = 0; j < deltaWeights[l].length; j++) {
+                deltaBias[l][j] = 0.0;
+                for (int i = 0; i < deltaWeights[l][j].length; i++) {
+                    deltaWeights[l][j][i] = 0.0;
+                }
+            }
         }
     }
 
     // Performs one batch of back propagation
-    private void doBatchBackprop(double[][]   outputValues,
+    private double doBatchBackProp(double[][]   outputValues,
                                  double[][]   errorValues,
                                  double[][][] deltaWeights,
                                  double[][]   deltaBias,
                                  double[][]   input,
                                  double[][]   expected) {
+        double sumSquareError = 0.0;
         for (int n = 0; n < input.length; n++) {
-            compute(outputValues, input[n]);
-            computeErrors(errorValues, outputValues, expected[n]);
+            feedForward(outputValues, input[n]);
+            sumSquareError += backPropagateErrors(errorValues, outputValues, expected[n]);
             incrementDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
         }
+        return sumSquareError;
     }
 
-    private void computeErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
+    private double backPropagateErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
         int layers = errorValues.length;
-        double sumError = 0.0;
+        double sumSquareError = 0.0;
         // compute cost at the output layer
-        double[] output = outputValues[outputValues.length - 1];
+        double[] output = outputValues[layers - 1];
         for (int j = 0; j < output.length; j++) {
             double delta = expected[j] - output[j];
-            sumError += delta * delta;
             errorValues[layers-1][j] = delta * activationFn.derivative(output[j]);
+            sumSquareError += delta * delta;
         }
-        logger.info("Error: {}", sumError);
         // compute error at hidden layers
         for (int currentLayer = layers-1; currentLayer > 1; currentLayer--) {
             int previousLayer = currentLayer - 1;
@@ -92,6 +108,7 @@ public class MLP {
                 errorValues[previousLayer][i] = delta * activationFn.derivative(hidden[i]);
             }
         }
+        return sumSquareError;
     }
 
     private void incrementDeltaWeightsAndBias(double[][][] deltaWeights,
@@ -101,13 +118,13 @@ public class MLP {
         int layers = errorValues.length;
         for (int currentLayer = layers-1; currentLayer > 0; currentLayer--) {
             int previousLayer = currentLayer - 1;
-            for (int i = 0; i < errorValues[previousLayer].length; i++) {
-                for (int j = 0; j < errorValues[currentLayer].length; j++) {
-                    deltaWeights[previousLayer][j][i] -=
-                            learningRate * errorValues[previousLayer][i] * outputValues[currentLayer][j];
+            for (int j = 0; j < errorValues[currentLayer].length; j++) {
+                deltaBias[previousLayer][j] +=
+                        learningRate * errorValues[currentLayer][j];
+                for (int i = 0; i < errorValues[previousLayer].length; i++) {
+                    deltaWeights[previousLayer][j][i] +=
+                            learningRate * errorValues[currentLayer][j] * outputValues[previousLayer][i];
                 }
-                deltaBias[previousLayer][errorValues[currentLayer].length - 1] -=
-                        learningRate * errorValues[previousLayer][i];
             }
         }
     }

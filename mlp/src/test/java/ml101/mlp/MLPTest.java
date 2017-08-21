@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MLPTest {
-    private final double DELTA = 0.001;
+    private final double DELTA = 0.01;
 
     @Test
     public void shouldWorkWithManuallyConfiguredXOR() {
@@ -28,10 +28,10 @@ public class MLPTest {
     public void shouldWorkWithTrainedConfiguredXOR() {
         final MLP mlp = new MLP.Builder()
                 .activation(new LogisticFn())
-                .layers(2, 4, 3, 1)
+                .layers(2, 2, 1)
                 .randomWeights()
-                .learningRate(0.001)
-                .epochs(100)
+                .learningRate(0.05)
+                .epochs(1000000)
                 .build();
         mlp.train(
                 new double[][] {{0.0, 0.0},
@@ -42,10 +42,10 @@ public class MLPTest {
                                 {1.0},
                                 {1.0},
                                 {0.0}});
-        assertEquals(0.0, mlp.compute(0.0, 0.0)[0], 0.2);
-        assertEquals(1.0, mlp.compute(0.0, 1.0)[0], 0.2);
-        assertEquals(1.0, mlp.compute(1.0, 0.0)[0], 0.2);
-        assertEquals(0.0, mlp.compute(1.0, 1.0)[0], 0.2);
+        assertEquals(0.0, mlp.compute(0.0, 0.0)[0], DELTA);
+        assertEquals(1.0, mlp.compute(0.0, 1.0)[0], DELTA);
+        assertEquals(1.0, mlp.compute(1.0, 0.0)[0], DELTA);
+        assertEquals(0.0, mlp.compute(1.0, 1.0)[0], DELTA);
     }
 
 }
