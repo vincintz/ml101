@@ -1,5 +1,7 @@
 package ml101.mlp.math;
 
+import ml101.mlp.activation.ActivationFn;
+
 public class NumUtilities {
     /**
      * Cross Multiply a Matrix with a Vector.
@@ -48,4 +50,17 @@ public class NumUtilities {
         return zeros;
     }
 
+    /**
+     * Fires activation function for each node in a vector
+     * @param vector Output values for a vector
+     */
+    public static void activate(double[] vector, ActivationFn fn) {
+        for (int i = 0; i < vector.length; i++) {
+            vector[i] = fn.compute(vector[i]);
+        }
+    }
+
+    public static double square(double v) {
+        return v * v;
+    }
 }

@@ -7,10 +7,11 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static ml101.mlp.math.NumUtilities.crossMultiply;
-import static ml101.mlp.math.NumUtilities.vectorAdd;
-import static ml101.mlp.math.NumUtilities.zerosFrom;
+import static ml101.mlp.math.NumUtilities.*;
 
+/**
+ * Multi-layer Perceptron
+ */
 public class MLP {
     private final static Logger logger = LoggerFactory.getLogger(MLP.class);
     private double[][][] weights;
@@ -18,6 +19,109 @@ public class MLP {
     private ActivationFn activationFn;
     private double learningRate;
     private int epochs;
+
+    /**
+     * Feed forward computation
+     */
+    public double[] compute(double... input) {
+        final double[][] outputValues = createComputationBuffer(weights);
+        return compute(outputValues, input);
+    }
+
+    // Feed forward computation
+    private double[] compute(final double[][] outputValues, double... input) {
+        System.arraycopy(input, 0, outputValues[0], 0, input.length);
+        for (int l = 0; l < weights.length; l++) {
+            crossMultiply(outputValues[l+1], weights[l], outputValues[l]);
+            vectorAdd(outputValues[l+1], outputValues[l+1], bias[l]);
+            activate(outputValues[l+1], activationFn);
+        }
+        return outputValues[weights.length];
+    }
+
+    /**
+     * Trains the network using batch back-propagation
+     */
+    public void train(final double[][] input, final double[][] expected) {
+        double[][]   outputValues  = createComputationBuffer(weights);
+        double[][]   errorValues   = createComputationBuffer(weights);
+        double[][][] deltaWeights  = zerosFrom(weights);
+        double[][]   deltaBias     = zerosFrom(bias);
+        for (int ep = 0; ep < epochs; ep++) {
+            doBatchBackprop(outputValues, errorValues,
+                            deltaWeights, deltaBias,
+                            input, expected);
+            updateWeightsAndBias(deltaWeights, deltaBias);
+        }
+    }
+
+    // Performs one batch of back propagation
+    private void doBatchBackprop(double[][]   outputValues,
+                                 double[][]   errorValues,
+                                 double[][][] deltaWeights,
+                                 double[][]   deltaBias,
+                                 double[][]   input,
+                                 double[][]   expected) {
+        for (int n = 0; n < input.length; n++) {
+            compute(outputValues, input[n]);
+            computeErrors(errorValues, outputValues, expected[n]);
+            incrementDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
+        }
+    }
+
+    private void computeErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
+        int layers = errorValues.length;
+        double sumError = 0.0;
+        // compute cost at the output layer
+        double[] output = outputValues[outputValues.length - 1];
+        for (int j = 0; j < output.length; j++) {
+            double delta = expected[j] - output[j];
+            sumError += delta * delta;
+            errorValues[layers-1][j] = delta * activationFn.derivative(output[j]);
+        }
+        logger.info("Error: {}", sumError);
+        // compute error at hidden layers
+        for (int currentLayer = layers-1; currentLayer > 1; currentLayer--) {
+            int previousLayer = currentLayer - 1;
+            double[] hidden = outputValues[previousLayer];
+            for (int i = 0; i < errorValues[previousLayer].length; i++) {
+                double delta = 0.0;
+                for (int j = 0; j < errorValues[currentLayer].length; j++) {
+                    delta += weights[previousLayer][j][i] * errorValues[currentLayer][j];
+                }
+                errorValues[previousLayer][i] = delta * activationFn.derivative(hidden[i]);
+            }
+        }
+    }
+
+    private void incrementDeltaWeightsAndBias(double[][][] deltaWeights,
+                                              double[][]   deltaBias,
+                                              double[][]   outputValues,
+                                              double[][]   errorValues) {
+        int layers = errorValues.length;
+        for (int currentLayer = layers-1; currentLayer > 0; currentLayer--) {
+            int previousLayer = currentLayer - 1;
+            for (int i = 0; i < errorValues[previousLayer].length; i++) {
+                for (int j = 0; j < errorValues[currentLayer].length; j++) {
+                    deltaWeights[previousLayer][j][i] -=
+                            learningRate * errorValues[previousLayer][i] * outputValues[currentLayer][j];
+                }
+                deltaBias[previousLayer][errorValues[currentLayer].length - 1] -=
+                        learningRate * errorValues[previousLayer][i];
+            }
+        }
+    }
+
+    private void updateWeightsAndBias(double[][][] deltaWeights, double[][] deltaBias) {
+        for (int k = 0; k < weights.length; k++) {
+            for (int j = 0; j < weights[k].length; j++) {
+                for (int i = 0; i < weights[k][j].length; i++) {
+                    weights[k][j][i] += deltaWeights[k][j][i];
+                }
+                bias[k][j] += deltaBias[k][j];
+            }
+        }
+    }
 
     // Initialize network weights from input array
     private void initializeWeights(double[] rawWeights, int... nodesPerLayer) {
@@ -36,7 +140,6 @@ public class MLP {
                 start += cols;
             }
         }
-        displayWeightsAndBias();
     }
 
     //  Initialize network weights with random values
@@ -48,7 +151,7 @@ public class MLP {
             int rows = nodesPerLayer[l + 1];
             int cols = nodesPerLayer[l];
             weights[l] = new double[rows][];
-            bias[l] = new double[cols];
+            bias[l] = new double[rows];
             for (int j = 0; j < rows; j++) {
                 bias[l][j] = Math.random();
                 weights[l][j] = new double[cols];
@@ -56,83 +159,6 @@ public class MLP {
                     weights[l][j][i] = Math.random();
                 }
             }
-        }
-        displayWeightsAndBias();
-    }
-
-    /**
-     * Feed forward computation
-     */
-    public double[] compute(double... input) {
-        final double[][] outputValues = createComputationBuffer(weights);
-        return compute(outputValues, input);
-    }
-
-    // Feed forward computation
-    private double[] compute(final double[][] outputValues, double... input) {
-        System.arraycopy(input, 0, outputValues[0], 0, input.length);
-        for (int l = 0; l < weights.length; l++) {
-            crossMultiply(outputValues[l+1], weights[l], outputValues[l]);
-            vectorAdd(outputValues[l+1], outputValues[l+1], bias[l]);
-            activate(outputValues[l+1]);
-        }
-        return outputValues[weights.length];
-    }
-
-    /**
-     * Trains the network using batch back-propagation
-     */
-    public void train(final double[][] x, final double[][] y) {
-        double[][][] deltaWeights = zerosFrom(weights);
-        double[][] deltaBias = zerosFrom(bias);
-        for (int ep = 0; ep < epochs; ep++) {
-            doBatchBackprop(deltaWeights, deltaBias, x, y);
-            updateWeightsAndBias(deltaWeights, deltaBias);
-        }
-        displayWeightsAndBias();
-    }
-
-    /**
-     * Performs one batch of back propagation
-     */
-    private void doBatchBackprop(double[][][] deltaWeights,
-                                 double[][] deltaBias,
-                                 final double[][] x,
-                                 final double[][] y) {
-        for (int n = 0; n < x.length; n++) {
-            double[] h = compute(x[n]);
-            double cost = cost(h, y[n]);
-            logger.info("cost: {}", cost);
-            //throw new UnsupportedOperationException();
-        }
-    }
-
-    private double cost(double[] h, double[] y) {
-        double sumSq = 0.0;
-        for (int i = 0; i < y.length; i++) {
-            sumSq += Math.pow(h[i] - y[i], 2);
-        }
-        return (1.0 / 2.0*y.length) * sumSq;
-    }
-
-    private void updateWeightsAndBias(double[][][] deltaWeights, double[][] deltaBias) {
-        for (int k = 0; k < weights.length; k++) {
-            for (int j = 0; j < weights[k].length; j++) {
-                for (int i = 0; i < weights[k][j].length; i++) {
-                    weights[k][j][i] += deltaWeights[k][j][i];
-                }
-                bias[k][j] += deltaBias[k][j];
-            }
-        }
-    }
-
-    /**
-     * Fires activation function for each node in a layer
-     * @param layer Output values for a layer
-     */
-    private void activate(double[] layer) {
-        for (int i = 0; i < layer.length; i++) {
-            layer[i] = activationFn.compute(layer[i]);
         }
     }
 

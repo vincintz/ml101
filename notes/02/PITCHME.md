@@ -164,3 +164,4 @@ private void multMatrixVector(
 ---
 ### References
 * http://neuralnetworksanddeeplearning.com/chap2.html
+* http://www.cse.unsw.edu.au/~cs9417ml/MLP2/
