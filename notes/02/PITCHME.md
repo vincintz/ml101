@@ -147,11 +147,11 @@ public static void vectorAdd(double[] result,
 }
 ```
 
----
++++
 ### To generalize:
 ![Picture of MLP](http://www.cse.unsw.edu.au/~cs9417ml/MLP2/BPNeuralNetwork.jpg)
 
-+++
+---
 * But our XOR network was programmed
   * We chose the weights to solve the problem
 * We need an algorithm to _learn_ the weights
@@ -163,8 +163,8 @@ public static void vectorAdd(double[] result,
 +++
 * We also need the following:
   * A _learning rate_
-  * Stopping criteria (_number of iterations_)
-  * Performance measure (remember _<P, M, T>_)
+  * Stopping criteria
+  * Performance measure
     * Error/cost function
 
 ---
@@ -338,8 +338,7 @@ private void computeDeltaWeightsAndBias(double[][][] deltaWeights,
 
 ---
 ### Next Step
-
-* Back-propagation intuition
+* Gradient descent intuition
   * Error function over time (epoch)
   * Weight/Bias update computation
 * Possible improvements
@@ -347,6 +346,9 @@ private void computeDeltaWeightsAndBias(double[][][] deltaWeights,
   * momentum
   * Batch vs SGD vs mixed
   * use a numeric math library
+
++++
+### Next Step
 * Real world application
   * preparing the data
 * Troubleshooting
