@@ -161,11 +161,11 @@ public static void vectorAdd(double[] result,
   * Activation function
 
 +++
-* For learning, we also need a learning
+* We also need the following:
   * A _learning rate_
   * Stopping criteria (_number of iterations_)
   * Performance measure (remember _<P, M, T>_)
-    * Error/cost function 
+    * Error/cost function
 
 ---
 ### Sample API
@@ -205,7 +205,17 @@ mlp.train(
 ```
 
 ---
-### Training Algorithm
+### Training Algorithms
+* Randomly update the weights
+* Change each weight by a small amount
+  * keep the update that decrease the error
+* Change each weight by a small amount
+  * predict which update will decrease the error
+  * derivative == gradient == direction of growth
+  * use negative gradient :-)
+
+---
+### Gradient Descent Algorithm
 
 * Run forward computation
 * Compute difference between expected output and forward computation output
@@ -213,41 +223,130 @@ mlp.train(
 * Repeat the above steps
 
 +++
-### We need to implement the following
-* Forward computation
-* Cost/error function (for the outplut layer and the hidden layer/s)
-* Strategy for updating the weights
-* Stopping criteria
+### Backpropagation Algorithm
 
----
+* Run forward computation
+* At the output layer
+  * Compute difference between expected output and forward computation output
+  * Update the weights to minimize the difference
+* For each hidden layer (nearest to the OL, going backwards)
+  * Compute a difference that would improve the output from this layer to the next
+  * Update the weights to minimize the difference
+* Repeat the above steps
+
++++
 ### Back-propagation
 
 Backpropagation is a method used in artificial neural networks to calculate the error contribution of each neuron after
 a batch of data (in image recognition, multiple images) is processed
 
++++
+### Gradient Descent
+Gradient descent is a first-order iterative optimization algorithm for finding the minimum of a function.
+To find a local minimum of a function using gradient descent, one takes steps proportional to the negative of the
+gradient (or of the approximate gradient) of the function at the current point.
+
 ---
-### Train
 ```
-for (int ep = 0; ep < epochs; ep++) {
-    double totalSumSquareError = doBatchBackProp(outputValues, errorValues,
-                                                 deltaWeights, deltaBias,
-                                                 input, expected);
+public void train(final double[][] input,
+                  final double[][] expected) {
+  for (int ep = 0; ep < epochs; ep++) {
+    doBatchBackProp(deltaWeights, deltaBias,
+                    input, expected);
     updateWeightsAndBias(deltaWeights, deltaBias);
-    if (ep % 1000 == 0) {
-        logger.info("{} : {}", ep, totalSumSquareError);
+  }
+}
+```
+
++++
+```
+private double doBatchBackProp(double[][][] deltaWeights, double[][]   deltaBias,
+                               double[][] input, double[][]   expected) {
+  for (int n = 0; n < input.length; n++) {
+    feedForward(outputValues, input[n]);
+    computeNodeErrors(errorValues, outputValues, expected[n]);
+    computeDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
+  }
+}
+```
+
++++
+```
+private void updateWeightsAndBias(double[][][] deltaWeights,
+                                  double[][] deltaBias) {
+  for (int k = 0; k < weights.length; k++) {
+    for (int j = 0; j < weights[k].length; j++) {
+      for (int i = 0; i < weights[k][j].length; i++) {
+        weights[k][j][i] += deltaWeights[k][j][i];
+        deltaWeights[k][j][i] = 0.0;
+      }
+      bias[k][j] += deltaBias[k][j];
+      deltaBias[k][j] = 0.0;
+    }
+  }
+}
+```
+
++++
+```
+private double computeNodeErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
+  int layers = errorValues.length;
+  double sumSquareError = 0.0;
+  // compute cost at the output layer
+  double[] output = outputValues[layers - 1];
+  for (int j = 0; j < output.length; j++) {
+    double delta = expected[j] - output[j];
+    errorValues[layers-1][j] = delta * activationFn.derivative(output[j]);
+    sumSquareError += delta * delta;
+  }
+  // compute error at hidden layers
+  for (int currentLayer = layers-1; currentLayer > 1; currentLayer--) {
+    int previousLayer = currentLayer - 1;
+    double[] hidden = outputValues[previousLayer];
+    for (int i = 0; i < errorValues[previousLayer].length; i++) {
+      double delta = 0.0;
+      for (int j = 0; j < errorValues[currentLayer].length; j++) {
+        delta += weights[previousLayer][j][i] * errorValues[currentLayer][j];
+      }
+      errorValues[previousLayer][i] = delta * activationFn.derivative(hidden[i]);
+    }
+  }
+  return sumSquareError;
+}
+```
+
++++
+```
+private void computeDeltaWeightsAndBias(double[][][] deltaWeights,
+                                        double[][]   deltaBias,
+                                        double[][]   outputValues,
+                                        double[][]   errorValues) {
+    int layers = errorValues.length;
+    for (int currentLayer = layers-1; currentLayer > 0; currentLayer--) {
+        int previousLayer = currentLayer - 1;
+        for (int j = 0; j < errorValues[currentLayer].length; j++) {
+            deltaBias[previousLayer][j] +=
+                    learningRate * errorValues[currentLayer][j];
+            for (int i = 0; i < errorValues[previousLayer].length; i++) {
+                deltaWeights[previousLayer][j][i] +=
+                        learningRate * errorValues[currentLayer][j] * outputValues[previousLayer][i];
+            }
+        }
     }
 }
 ```
+
 ---
 ### Next Step
 
 * Back-propagation intuition
   * Error function over time (epoch)
+  * Weight/Bias update computation
 * Possible improvements
-  * math libraries
   * regularization
   * momentum
   * Batch vs SGD vs mixed
+  * use a numeric math library
 * Real world application
   * preparing the data
 * Troubleshooting

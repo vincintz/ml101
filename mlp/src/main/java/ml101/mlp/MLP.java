@@ -56,6 +56,7 @@ public class MLP {
                 logger.info("{} : {}", ep, totalSumSquareError);
             }
         }
+        displayWeightsAndBias();
     }
 
     // Performs one batch of back propagation
@@ -68,13 +69,13 @@ public class MLP {
         double totalSumSquareError = 0.0;
         for (int n = 0; n < input.length; n++) {
             feedForward(outputValues, input[n]);
-            totalSumSquareError += backPropagateErrors(errorValues, outputValues, expected[n]);
-            incrementDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
+            totalSumSquareError += computeNodeErrors(errorValues, outputValues, expected[n]);
+            computeDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
         }
         return totalSumSquareError;
     }
 
-    private double backPropagateErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
+    private double computeNodeErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
         int layers = errorValues.length;
         double sumSquareError = 0.0;
         // compute cost at the output layer
@@ -99,10 +100,10 @@ public class MLP {
         return sumSquareError;
     }
 
-    private void incrementDeltaWeightsAndBias(double[][][] deltaWeights,
-                                              double[][]   deltaBias,
-                                              double[][]   outputValues,
-                                              double[][]   errorValues) {
+    private void computeDeltaWeightsAndBias(double[][][] deltaWeights,
+                                            double[][]   deltaBias,
+                                            double[][]   outputValues,
+                                            double[][]   errorValues) {
         int layers = errorValues.length;
         for (int currentLayer = layers-1; currentLayer > 0; currentLayer--) {
             int previousLayer = currentLayer - 1;
