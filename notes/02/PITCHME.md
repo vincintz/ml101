@@ -214,6 +214,9 @@ mlp.train(
   * derivative == gradient == direction of growth
   * use negative gradient :-)
 
++++
+![Picture of MLP](http://www.cse.unsw.edu.au/~cs9417ml/MLP2/BPNeuralNetwork.jpg)
+
 ---
 ### Gradient Descent Algorithm
 
