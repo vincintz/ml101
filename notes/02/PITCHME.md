@@ -250,6 +250,7 @@ To find a local minimum of a function using gradient descent, one takes steps pr
 gradient (or of the approximate gradient) of the function at the current point.
 
 ---
+### train()
 ```
 public void train(final double[][] input,
                   final double[][] expected) {
@@ -262,6 +263,7 @@ public void train(final double[][] input,
 ```
 
 +++
+### doBatchBackProp()
 ```
 private double doBatchBackProp(double[][][] deltaWeights, double[][]   deltaBias,
                                double[][] input, double[][]   expected) {
@@ -274,6 +276,7 @@ private double doBatchBackProp(double[][][] deltaWeights, double[][]   deltaBias
 ```
 
 +++
+### updateWeightsAndBias()
 ```
 private void updateWeightsAndBias(double[][][] deltaWeights,
                                   double[][] deltaBias) {
@@ -291,6 +294,7 @@ private void updateWeightsAndBias(double[][][] deltaWeights,
 ```
 
 +++
+### computeNodeErrors()
 ```
 private double computeNodeErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
   int layers = errorValues.length;
@@ -319,6 +323,7 @@ private double computeNodeErrors(double[][] errorValues, double[][] outputValues
 ```
 
 +++
+### computeDeltaWeightsAndBias()
 ```
 private void computeDeltaWeightsAndBias(double[][][] deltaWeights,
                                         double[][]   deltaBias,
@@ -338,6 +343,15 @@ private void computeDeltaWeightsAndBias(double[][][] deltaWeights,
     }
 }
 ```
+
+---
+### Results
+#### Cost vs Epoch
+![Cost vs Epoch](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/xor-train.png)
+
++++
+#### Can get stuck in a local minima
+![Cost vs Epoch](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/xor-train-stuck.png)
 
 ---
 ### Next Step
