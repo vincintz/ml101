@@ -149,7 +149,7 @@ public static void vectorAdd(double[] result,
 
 +++
 ### To generalize:
-![Picture of MLP](http://www.cse.unsw.edu.au/~cs9417ml/MLP2/BPNeuralNetwork.jpg)
+![Picture of MLP](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/mlp.png)
 
 ---
 * But our XOR network was programmed
@@ -215,7 +215,7 @@ mlp.train(
   * use negative gradient :-)
 
 +++
-![Picture of MLP](http://www.cse.unsw.edu.au/~cs9417ml/MLP2/BPNeuralNetwork.jpg)
+![Picture of MLP](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/mlp.png)
 
 ---
 ### Gradient Descent Algorithm
