@@ -250,7 +250,7 @@ To find a local minimum of a function using gradient descent, one takes steps pr
 gradient (or of the approximate gradient) of the function at the current point.
 
 ---
-### train()
+### train
 ```
 public void train(final double[][] input,
                   final double[][] expected) {
@@ -263,7 +263,7 @@ public void train(final double[][] input,
 ```
 
 +++
-### doBatchBackProp()
+### doBatchBackProp
 ```
 private double doBatchBackProp(double[][][] deltaWeights, double[][]   deltaBias,
                                double[][] input, double[][]   expected) {
@@ -276,7 +276,7 @@ private double doBatchBackProp(double[][][] deltaWeights, double[][]   deltaBias
 ```
 
 +++
-### updateWeightsAndBias()
+### updateWeightsAndBias
 ```
 private void updateWeightsAndBias(double[][][] deltaWeights,
                                   double[][] deltaBias) {
@@ -294,18 +294,18 @@ private void updateWeightsAndBias(double[][][] deltaWeights,
 ```
 
 +++
-### computeNodeErrors()
+### compute cost at the output layer 
 ```
-private double computeNodeErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
-  int layers = errorValues.length;
-  double sumSquareError = 0.0;
-  // compute cost at the output layer
   double[] output = outputValues[layers - 1];
   for (int j = 0; j < output.length; j++) {
     double delta = expected[j] - output[j];
     errorValues[layers-1][j] = delta * activationFn.derivative(output[j]);
     sumSquareError += delta * delta;
   }
+```
++++
+### compute error at hidden layers 
+```
   // compute error at hidden layers
   for (int currentLayer = layers-1; currentLayer > 1; currentLayer--) {
     int previousLayer = currentLayer - 1;
@@ -318,29 +318,23 @@ private double computeNodeErrors(double[][] errorValues, double[][] outputValues
       errorValues[previousLayer][i] = delta * activationFn.derivative(hidden[i]);
     }
   }
-  return sumSquareError;
-}
 ```
 
 +++
-### computeDeltaWeightsAndBias()
+### computeDeltaWeightsAndBias
 ```
-private void computeDeltaWeightsAndBias(double[][][] deltaWeights,
-                                        double[][]   deltaBias,
-                                        double[][]   outputValues,
-                                        double[][]   errorValues) {
-    int layers = errorValues.length;
-    for (int currentLayer = layers-1; currentLayer > 0; currentLayer--) {
-        int previousLayer = currentLayer - 1;
-        for (int j = 0; j < errorValues[currentLayer].length; j++) {
-            deltaBias[previousLayer][j] +=
-                    learningRate * errorValues[currentLayer][j];
-            for (int i = 0; i < errorValues[previousLayer].length; i++) {
-                deltaWeights[previousLayer][j][i] +=
-                        learningRate * errorValues[currentLayer][j] * outputValues[previousLayer][i];
-            }
-        }
+int layers = errorValues.length;
+for (int currentLayer = layers-1; currentLayer > 0; currentLayer--) {
+  int previousLayer = currentLayer - 1;
+  for (int j = 0; j < errorValues[currentLayer].length; j++) {
+    deltaBias[previousLayer][j] +=
+            learningRate * errorValues[currentLayer][j];
+    for (int i = 0; i < errorValues[previousLayer].length; i++) {
+        deltaWeights[previousLayer][j][i] +=
+                learningRate * errorValues[currentLayer][j]
+                             * outputValues[previousLayer][i];
     }
+  }
 }
 ```
 
