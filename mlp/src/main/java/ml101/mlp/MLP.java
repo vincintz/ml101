@@ -7,7 +7,7 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static ml101.mlp.math.NumUtilities.*;
+import static ml101.mlp.NumUtilities.*;
 
 /**
  * Multi-layer Perceptron
@@ -53,10 +53,9 @@ public class MLP {
                                                          input, expected);
             updateWeightsAndBias(deltaWeights, deltaBias);
             if (ep % 1000 == 0) {
-                logger.info("{} : {}", ep, totalSumSquareError);
+                logger.info("\t{}\t{}", ep, totalSumSquareError);
             }
         }
-        displayWeightsAndBias();
     }
 
     // Performs one batch of back propagation
@@ -181,7 +180,8 @@ public class MLP {
         return outputValues;
     }
 
-    private void displayWeightsAndBias() {
+    public void displayWeightsAndBias(final String text) {
+        logger.info(text);
         for (int l = 0; l < weights.length; l++) {
             logger.info("Layer " + (l+1));
             for (int j = 0; j < weights[l].length; j++) {

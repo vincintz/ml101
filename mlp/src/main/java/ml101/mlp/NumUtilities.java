@@ -1,4 +1,4 @@
-package ml101.mlp.math;
+package ml101.mlp;
 
 import ml101.mlp.activation.ActivationFn;
 

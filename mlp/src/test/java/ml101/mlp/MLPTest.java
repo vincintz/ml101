@@ -18,6 +18,7 @@ public class MLPTest {
                            1.5, -1.0, -1.0,
                           -1.5,  1.0,  1.0)
                 .build();
+        mlp.displayWeightsAndBias("Manually Configured");
         assertEquals(0.0, mlp.compute(0.0, 0.0)[0], DELTA);
         assertEquals(1.0, mlp.compute(0.0, 1.0)[0], DELTA);
         assertEquals(1.0, mlp.compute(1.0, 0.0)[0], DELTA);
@@ -33,6 +34,7 @@ public class MLPTest {
                 .learningRate(0.10)
                 .epochs(500000)
                 .build();
+        mlp.displayWeightsAndBias("Before Training");
         mlp.train(
                 new double[][] {{0.0, 0.0},
                                 {0.0, 1.0},
@@ -42,6 +44,7 @@ public class MLPTest {
                                 {1.0},
                                 {1.0},
                                 {0.0}});
+        mlp.displayWeightsAndBias("After Training");
         assertEquals(0.0, mlp.compute(0.0, 0.0)[0], DELTA);
         assertEquals(1.0, mlp.compute(0.0, 1.0)[0], DELTA);
         assertEquals(1.0, mlp.compute(1.0, 0.0)[0], DELTA);
