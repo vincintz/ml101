@@ -367,10 +367,11 @@ private void computeDeltaWeightsAndBias(double[][][] deltaWeights,
 +++
 ### Next Step
 * Real world application
-  * preparing the data
+  * Data preparation
+  * Train/Test/Validation data
 * Troubleshooting
-  * tuning the parameters
-  * bias vs variance
+  * Tuning the parameters
+  * Bias vs Variance
 
 ---
 ### References
