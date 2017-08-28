@@ -44,7 +44,8 @@ public class MnistData {
                 input[i] = new double[imageSize];
                 images.read(imageData);
                 for (int j = 0; j < imageSize; j++) {
-                    input[i][j] = imageData[j] == 0 ? 0.0 : 1.0;
+                    int x = imageData[j] & 0xff;
+                    input[i][j] = x / 255.0;
                 }
             }
         }
@@ -67,10 +68,22 @@ public class MnistData {
 
     public void display(final int index) {
         int x = 0;
-        int label = (int)(output[index][0]);
+        int label = (int)(output(index)[0]);
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
-                System.out.print(input(index)[x++] < 0.5 ? " ": label);
+                double d = input(index)[x++];
+                if (d < 0.2) {
+                    System.out.print(" ");
+                }
+                else if (d < 0.5) {
+                    System.out.print(".");
+                }
+                else if (d < 0.8) {
+                    System.out.print("-");
+                }
+                else {
+                    System.out.print(label);
+                }
             }
             System.out.println();
         }

@@ -32,7 +32,7 @@ public class MLPTest {
                 .layers(2, 2, 1)
                 .randomWeights()
                 .learningRate(0.10)
-                .epochs(500000)
+                .iterations(500000)
                 .build();
         mlp.displayWeightsAndBias("Before Training");
         mlp.train(
@@ -51,4 +51,22 @@ public class MLPTest {
         assertEquals(0.0, mlp.compute(1.0, 1.0)[0], DELTA);
     }
 
+    @Test
+    public void shouldSaveAndLoadXor() throws Exception {
+        final MLP mlp = new MLP.Builder()
+                .activation(new StepFn())
+                .layers(2, 2, 1)
+                .weights( -0.5,  1.0,  1.0,
+                        1.5, -1.0, -1.0,
+                        -1.5,  1.0,  1.0)
+                .build();
+        mlp.save("xor.mlp");
+        final MLP xorLoaded = new MLP.Builder()
+                .build("xor.mlp");
+        xorLoaded.displayWeightsAndBias("Loaded from file");
+        assertEquals(0.0, xorLoaded.compute(0.0, 0.0)[0], DELTA);
+        assertEquals(1.0, xorLoaded.compute(0.0, 1.0)[0], DELTA);
+        assertEquals(1.0, xorLoaded.compute(1.0, 0.0)[0], DELTA);
+        assertEquals(0.0, xorLoaded.compute(1.0, 1.0)[0], DELTA);
+    }
 }

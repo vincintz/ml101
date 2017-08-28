@@ -36,5 +36,6 @@ gradle-app.setting
 .gradletasknamecache
 
 # data
+*.mlp
 /data/mnist/*
 !/data/mnist/*.sh

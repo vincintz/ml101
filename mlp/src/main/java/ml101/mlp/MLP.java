@@ -2,6 +2,7 @@ package ml101.mlp;
 
 import ml101.mlp.activation.ActivationFn;
 
+import java.io.*;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
@@ -12,13 +13,13 @@ import static ml101.mlp.NumUtilities.*;
 /**
  * Multi-layer Perceptron
  */
-public class MLP {
-    private final static Logger logger = LoggerFactory.getLogger(MLP.class);
+public class MLP implements Serializable {
+    transient private final static Logger logger = LoggerFactory.getLogger(MLP.class);
+    transient private double learningRate;
+    transient private int epochs;
+    private ActivationFn activationFn;
     private double[][][] weights;
     private double[][] bias;
-    private ActivationFn activationFn;
-    private double learningRate;
-    private int epochs;
 
     /**
      * Feed forward computation
@@ -197,6 +198,14 @@ public class MLP {
         }
     }
 
+    public void save(String filename) throws IOException {
+        File file = new File(filename);
+        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+            out.writeObject(this);
+            out.flush();
+        }
+    }
+
     /**
      * MLP configuration object.
      * Collects configuration info, then builds a MLP.
@@ -249,9 +258,17 @@ public class MLP {
             return this;
         }
 
-        public Builder epochs(int epochs) {
+        public Builder iterations(int epochs) {
             this.epochs = epochs;
             return this;
+        }
+
+        public MLP build(String filename) throws Exception {
+            try (ObjectInputStream stream
+                         = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
+                final MLP mlp = (MLP)stream.readObject();
+                return mlp;
+            }
         }
     }
 

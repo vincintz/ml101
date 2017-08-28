@@ -1,6 +1,8 @@
 package ml101.mlp.activation;
 
-public class StepFn implements ActivationFn {
+import java.io.Serializable;
+
+public class StepFn implements ActivationFn, Serializable {
     @Override
     public double compute(double z) {
         if (z < 0)
