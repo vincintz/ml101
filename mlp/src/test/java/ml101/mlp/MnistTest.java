@@ -1,14 +1,13 @@
-package ml101.mnist;
+package ml101.mlp;
 
-import ml101.mlp.MLP;
 import ml101.mlp.activation.LogisticFn;
-import mnist.MnistData;
+import ml101.mlp.mnist.MnistData;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class MnistDataTest {
+public class MnistTest {
     private MnistData trainingData;
     private MnistData testData;
 

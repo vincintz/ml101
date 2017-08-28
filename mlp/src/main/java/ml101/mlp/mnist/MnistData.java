@@ -1,4 +1,4 @@
-package mnist;
+package ml101.mlp.mnist;
 
 import java.io.*;
 

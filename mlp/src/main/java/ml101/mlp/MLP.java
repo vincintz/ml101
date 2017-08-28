@@ -5,7 +5,7 @@ import ml101.mlp.activation.ActivationFn;
 import java.io.*;
 import java.util.Arrays;
 
-import mnist.MnistData;
+import ml101.mlp.mnist.MnistData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +61,19 @@ public class MLP implements Serializable {
     }
 
     public void train(final MnistData trainingData) {
-        //throw new UnsupportedOperationException("Not yet ");
+        double[][]   outputValues  = createComputationBuffer(weights);
+        double[][]   errorValues   = createComputationBuffer(weights);
+        double[][][] deltaWeights  = zerosFrom(weights);
+        double[][]   deltaBias     = zerosFrom(bias);
+        for (int ep = 0; ep < epochs; ep++) {
+            double totalSumSquareError = doBatchBackProp(outputValues, errorValues,
+                    deltaWeights, deltaBias,
+                    trainingData);
+            updateWeightsAndBias(deltaWeights, deltaBias);
+            if (ep % 1000 == 0) {
+                logger.info("\t{}\t{}", ep, totalSumSquareError);
+            }
+        }
     }
 
     // Performs one batch of back propagation
@@ -75,6 +87,21 @@ public class MLP implements Serializable {
         for (int n = 0; n < input.length; n++) {
             feedForward(outputValues, input[n]);
             totalSumSquareError += computeNodeErrors(errorValues, outputValues, expected[n]);
+            computeDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
+        }
+        return totalSumSquareError;
+    }
+
+    // Performs one batch of back propagation
+    private double doBatchBackProp(double[][]   outputValues,
+                                   double[][]   errorValues,
+                                   double[][][] deltaWeights,
+                                   double[][]   deltaBias,
+                                   MnistData mnistData) {
+        double totalSumSquareError = 0.0;
+        for (int n = 0; n < mnistData.numberOfItems(); n++) {
+            feedForward(outputValues, mnistData.input(n));
+            totalSumSquareError += computeNodeErrors(errorValues, outputValues, mnistData.output(n));
             computeDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
         }
         return totalSumSquareError;
