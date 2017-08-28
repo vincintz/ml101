@@ -16,6 +16,9 @@ public class MnistDataTest {
                 "../data/mnist/t10k-labels-idx1-ubyte");
         assertEquals(60000, trainingData.numberOfItems());
         assertEquals(10000, testData.numberOfItems());
+        for (int x = 100; x < 200; x++) {
+            trainingData.display(x);
+        }
     }
 
 }
