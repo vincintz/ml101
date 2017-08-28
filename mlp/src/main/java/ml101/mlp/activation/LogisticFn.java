@@ -1,6 +1,8 @@
 package ml101.mlp.activation;
 
-public class LogisticFn implements ActivationFn {
+import java.io.Serializable;
+
+public class LogisticFn implements ActivationFn, Serializable {
     @Override
     public double compute(double z) {
         return 1.0 / (1.0 + Math.exp(-z));

@@ -5,6 +5,7 @@ import ml101.mlp.activation.ActivationFn;
 import java.io.*;
 import java.util.Arrays;
 
+import mnist.MnistData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +58,10 @@ public class MLP implements Serializable {
                 logger.info("\t{}\t{}", ep, totalSumSquareError);
             }
         }
+    }
+
+    public void train(final MnistData trainingData) {
+        //throw new UnsupportedOperationException("Not yet ");
     }
 
     // Performs one batch of back propagation
@@ -210,13 +215,12 @@ public class MLP implements Serializable {
      * MLP configuration object.
      * Collects configuration info, then builds a MLP.
      */
-    public static class Builder
-    {
-        private ActivationFn activationFn;
-        private int[] nodesPerLayer;
-        private double[] rawWeights;
-        private double learningRate;
-        private int epochs;
+    public static class Builder {
+        private ActivationFn activationFn = null;
+        private int[] nodesPerLayer = null;
+        private double[] rawWeights = null;
+        private double learningRate = 0.01;
+        private int epochs = 1000;
 
         public MLP build() {
             final MLP mlp;
@@ -245,11 +249,6 @@ public class MLP implements Serializable {
 
         public Builder weights(double... weights) {
             this.rawWeights = weights;
-            return this;
-        }
-
-        public Builder randomWeights() {
-            this.rawWeights = null;
             return this;
         }
 

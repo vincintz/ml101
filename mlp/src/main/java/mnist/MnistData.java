@@ -30,9 +30,16 @@ public class MnistData {
             // read labels
             byte[] labelData = new byte[numberOfItems];
             labels.read(labelData);
-            for (int i = 0; i < numberOfItems; i++) {
-                output[i] = new double[1];
-                output[i][0] = labelData[i];
+            for (int j = 0; j < numberOfItems; j++) {
+                output[j] = new double[10];
+                for (int i = 0; i < 10; i++) {
+                    if (labelData[j] == i) {
+                        output[j][i] = 1.0;
+                    }
+                    else {
+                        output[j][i] = 0.0;
+                    }
+                }
             }
 
             // read images
@@ -68,25 +75,16 @@ public class MnistData {
 
     public void display(final int index) {
         int x = 0;
-        int label = (int)(output(index)[0]);
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
                 double d = input(index)[x++];
-                if (d < 0.2) {
-                    System.out.print(" ");
-                }
-                else if (d < 0.5) {
-                    System.out.print(".");
-                }
-                else if (d < 0.8) {
-                    System.out.print("-");
-                }
-                else {
-                    System.out.print(label);
-                }
+                if      (d < 0.2) System.out.print(" ");
+                else if (d < 0.5) System.out.print(".");
+                else if (d < 0.8) System.out.print("-");
+                else              System.out.print("=");
             }
             System.out.println();
         }
-        System.out.println();
+        System.out.println("----------------------------");
     }
 }

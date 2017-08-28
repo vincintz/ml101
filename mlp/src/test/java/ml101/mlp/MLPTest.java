@@ -30,7 +30,6 @@ public class MLPTest {
         final MLP mlp = new MLP.Builder()
                 .activation(new LogisticFn())
                 .layers(2, 2, 1)
-                .randomWeights()
                 .learningRate(0.10)
                 .iterations(500000)
                 .build();
