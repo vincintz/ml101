@@ -70,9 +70,7 @@ public class MLP implements Serializable {
                     deltaWeights, deltaBias,
                     trainingData);
             updateWeightsAndBias(deltaWeights, deltaBias);
-            if (ep % 1000 == 0) {
-                logger.info("\t{}\t{}", ep, totalSumSquareError);
-            }
+            logger.info("\t{}\t{}", ep, totalSumSquareError);
         }
     }
 
