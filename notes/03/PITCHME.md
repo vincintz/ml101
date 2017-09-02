@@ -5,24 +5,37 @@
 ## Recall
 * Multilayer Perceptron (MLP)
 * Forward Computation
-* Backpropagation
+* Training: Backpropagation
 
 +++
 ### Multilayer Perceptron (MLP)
 
 ![Picture of MLP](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/mlp.png)
 
-* input / hidden / output
-* weights / bias
-
-
 +++
-### Multilayer Perceptron (MLP)
-
-* input/output 
+### Forward Computation
+![Picture of MLP](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/xor-mlp.png)
 
 +++
 ### Forward Computation
+```
+// precondition:  initialized bias and weights
+// input:
+// postcondition: out[ 
+for each layer (L)
+  for each neuron (j) in layer (L)
+    let out[j] = b[j]
+    for each neuron (i) in layer (L-1)
+      out[j] = 
+    end
+  end
+end
+```
++++
+### Training: Backpropagation
+
+* Update the weights and bias such that a certain error function is minimized
+* Error function: 
 
 ---
 ## Input/Output Samples
