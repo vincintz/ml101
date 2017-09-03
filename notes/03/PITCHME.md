@@ -70,21 +70,22 @@ class Layer:
 
 * We isolate a sample weight/bias (first bias at first layer)
 
-![cost = sumSquare(expected - output)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient1.png)
+![Gradient)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient1.png)
+![cost = sumSquare(expected - output)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/cost.png)
 
 +++
 ### Recall from Calculus
 
 * Gradient is the slope of the line that 'touches' the graph at a certain point
 
-![cost = sumSquare(expected - output)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient2.png)
+![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient2.png)
 
 +++
 ### Recall from Calculus
 
 * Gradient is the slope of the line that 'touches' the graph at a certain point
 
-![cost = sumSquare(expected - output)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/a  ssets/gradient3.png)
+![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient3.png)
 
 ---
 ## Back Propagation
