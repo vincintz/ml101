@@ -8,12 +8,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MLPTest {
-    private final double DELTA = 0.02;
+    private final double DELTA = 0.5;
 
     @Test
     public void shouldWorkWithManuallyConfiguredXOR() {
         final MLP mlp = new MLP.Builder()
-                .activation(new StepFn())
+                .activation(new LogisticFn(5.0))
                 .layers(2, 2, 1)
                 .weights( -0.5,  1.0,  1.0,
                            1.5, -1.0, -1.0,
@@ -29,9 +29,9 @@ public class MLPTest {
     @Test
     public void shouldWorkWithTrainedXOR() {
         final MLP mlp = new MLP.Builder()
-                .activation(new LogisticFn())
+                .activation(new LogisticFn(1.0))
                 .layers(2, 2, 1)
-                .learningRate(0.1)
+                .learningRate(0.05)
                 .iterations(500000)
                 .build();
         mlp.displayWeightsAndBias("Before Training");

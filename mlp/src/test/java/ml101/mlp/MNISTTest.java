@@ -31,7 +31,7 @@ public class MNISTTest {
     public void shouldTrainAndSave() throws Exception {
         final MLP mlp = new MLP.Builder()
                 .layers(28*28, 1200, 10)
-                .activation(new LogisticFn())
+                .activation(new LogisticFn(2.0))
                 .iterations(500000)
                 .reporter((epoch, cost) -> System.out.println(epoch + "\t" + cost))
                 .build();
