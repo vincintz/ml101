@@ -15,7 +15,7 @@
 +++
 ### Multilayer Perceptron (MLP)
 
-Terms
+#### Terms
 * neuron/node
 * layer
 * weight and bias
@@ -59,7 +59,7 @@ class Layer:
     }
 ```
 +++
-### Training: Backpropagation
+### Training
 
 * Compute cost at the output layer
   * ![cost = sumSquare(expected - output)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/cost.png)
@@ -71,18 +71,20 @@ class Layer:
 * We isolate a sample weight/bias (first bias at first layer)
 
 ![Gradient)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient1.png)
+
 ![cost = sumSquare(expected - output)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/cost.png)
 
 +++
-### Recall from Calculus
-
 * Gradient is the slope of the line that 'touches' the graph at a certain point
 
 ![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient2.png)
 
 +++
-### Recall from Calculus
+* When the slope is positive
 
+![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient2.png)
+
++++
 * Gradient is the slope of the line that 'touches' the graph at a certain point
 
 ![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient3.png)
