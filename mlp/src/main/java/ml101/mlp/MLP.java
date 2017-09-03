@@ -18,7 +18,7 @@ public class MLP implements Serializable {
     transient private int epochs;
     transient private BiConsumer<Integer, Double> reporter;
 
-    final private Layer[] layers;
+    final Layer[] layers;
 
     /**
      * MLP Constructor
@@ -91,6 +91,17 @@ public class MLP implements Serializable {
         return cost;
     }
 
+    /*
+     * Used to generate gradient graph
+     */
+    double computeCost(final TrainingData trainingData) {
+        double cost = 0.0;
+        for (int n = 0; n < trainingData.length(); n++) {
+            double[] output = feedForward(trainingData.input(n));
+            cost += computeCost(trainingData.output(n), output);
+        }
+        return cost / trainingData.length();
+    }
     /**
      * Computes the change in weights and biases, starting at the output layers, going backwards.
      */

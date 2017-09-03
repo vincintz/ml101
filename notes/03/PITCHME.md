@@ -16,7 +16,6 @@
 ### Multilayer Perceptron (MLP)
 
 #### Conventions
-* number of layers = number of hidden layers + output layer
 * we use the following indeces
   * _l_ : for layer
   * _j_ : node in current layer / output node
@@ -59,6 +58,8 @@ class Layer:
 
 ---
 ## Gradient Descent
+
+* 
 
 ---
 ## Back Propagation

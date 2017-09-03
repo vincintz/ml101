@@ -15,13 +15,13 @@ import static ml101.mlp.NumUtilities.vectorAdd;
 public class Layer implements Serializable {
     transient final private static Logger logger = LoggerFactory.getLogger(Layer.class);
     final private ActivationFn activationFn;
-    final private double[][]   weights;
-    final private double[]     bias;
+    final double[][]   weights;
+    final double[]     bias;
 
     transient double[]   output;
-    transient double[]   errors;
-    transient double[][] deltaWeights;
-    transient double[] deltaBias;
+    transient private double[]   errors;
+    transient private double[][] deltaWeights;
+    transient private double[]   deltaBias;
 
     Layer(ActivationFn activationFn, int numInputs, int numOutputs) {
         this.activationFn = activationFn;
