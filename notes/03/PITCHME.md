@@ -80,14 +80,17 @@ class Layer:
 ![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient2.png)
 
 +++
-* When the slope is positive
+* When the slope is positive, direction is away from the minimum
 
 ![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient2.png)
 
 +++
-* Gradient is the slope of the line that 'touches' the graph at a certain point
+* When the slope is negative, direction is away from the minimum
 
 ![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient3.png)
+
++++
+### Change in weights/biases
 
 ---
 ## Back Propagation
