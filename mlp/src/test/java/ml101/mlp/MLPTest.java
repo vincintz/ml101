@@ -2,12 +2,13 @@ package ml101.mlp;
 
 import ml101.mlp.activation.LogisticFn;
 import ml101.mlp.activation.StepFn;
+import ml101.mlp.data.PlainData;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class MLPTest {
-    private final double DELTA = 0.01;
+    private final double DELTA = 0.02;
 
     @Test
     public void shouldWorkWithManuallyConfiguredXOR() {
@@ -19,10 +20,10 @@ public class MLPTest {
                           -1.5,  1.0,  1.0)
                 .build();
         mlp.displayWeightsAndBias("Manually Configured");
-        assertEquals(0.0, mlp.compute(0.0, 0.0)[0], DELTA);
-        assertEquals(1.0, mlp.compute(0.0, 1.0)[0], DELTA);
-        assertEquals(1.0, mlp.compute(1.0, 0.0)[0], DELTA);
-        assertEquals(0.0, mlp.compute(1.0, 1.0)[0], DELTA);
+        assertEquals(0.0, mlp.feedForward(0.0, 0.0)[0], DELTA);
+        assertEquals(1.0, mlp.feedForward(0.0, 1.0)[0], DELTA);
+        assertEquals(1.0, mlp.feedForward(1.0, 0.0)[0], DELTA);
+        assertEquals(0.0, mlp.feedForward(1.0, 1.0)[0], DELTA);
     }
 
     @Test
@@ -30,11 +31,11 @@ public class MLPTest {
         final MLP mlp = new MLP.Builder()
                 .activation(new LogisticFn())
                 .layers(2, 2, 1)
-                .learningRate(0.10)
+                .learningRate(0.1)
                 .iterations(500000)
                 .build();
         mlp.displayWeightsAndBias("Before Training");
-        mlp.train(
+        mlp.train(new PlainData(
                 new double[][] {{0.0, 0.0},
                                 {0.0, 1.0},
                                 {1.0, 0.0},
@@ -42,12 +43,12 @@ public class MLPTest {
                 new double[][] {{0.0},
                                 {1.0},
                                 {1.0},
-                                {0.0}});
+                                {0.0}}));
         mlp.displayWeightsAndBias("After Training");
-        assertEquals(0.0, mlp.compute(0.0, 0.0)[0], DELTA);
-        assertEquals(1.0, mlp.compute(0.0, 1.0)[0], DELTA);
-        assertEquals(1.0, mlp.compute(1.0, 0.0)[0], DELTA);
-        assertEquals(0.0, mlp.compute(1.0, 1.0)[0], DELTA);
+        assertEquals(0.0, mlp.feedForward(0.0, 0.0)[0], DELTA);
+        assertEquals(1.0, mlp.feedForward(0.0, 1.0)[0], DELTA);
+        assertEquals(1.0, mlp.feedForward(1.0, 0.0)[0], DELTA);
+        assertEquals(0.0, mlp.feedForward(1.0, 1.0)[0], DELTA);
     }
 
     @Test
@@ -63,9 +64,9 @@ public class MLPTest {
         final MLP xorLoaded = new MLP.Builder()
                 .build("xor.mlp");
         xorLoaded.displayWeightsAndBias("Loaded from file");
-        assertEquals(0.0, xorLoaded.compute(0.0, 0.0)[0], DELTA);
-        assertEquals(1.0, xorLoaded.compute(0.0, 1.0)[0], DELTA);
-        assertEquals(1.0, xorLoaded.compute(1.0, 0.0)[0], DELTA);
-        assertEquals(0.0, xorLoaded.compute(1.0, 1.0)[0], DELTA);
+        assertEquals(0.0, xorLoaded.feedForward(0.0, 0.0)[0], DELTA);
+        assertEquals(1.0, xorLoaded.feedForward(0.0, 1.0)[0], DELTA);
+        assertEquals(1.0, xorLoaded.feedForward(1.0, 0.0)[0], DELTA);
+        assertEquals(0.0, xorLoaded.feedForward(1.0, 1.0)[0], DELTA);
     }
 }

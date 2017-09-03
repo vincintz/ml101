@@ -3,13 +3,11 @@ package ml101.mlp;
 import ml101.mlp.activation.ActivationFn;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.function.BiConsumer;
 
-import ml101.mlp.mnist.MnistData;
+import ml101.mlp.data.TrainingData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static ml101.mlp.NumUtilities.*;
 
 /**
  * Multi-layer Perceptron
@@ -18,218 +16,98 @@ public class MLP implements Serializable {
     transient private final static Logger logger = LoggerFactory.getLogger(MLP.class);
     transient private double learningRate;
     transient private int epochs;
-    private ActivationFn activationFn;
-    private double[][][] weights;
-    private double[][] bias;
+    transient private BiConsumer<Integer, Double> reporter;
 
-    /**
-     * Feed forward computation
-     */
-    public double[] compute(double... input) {
-        final double[][] outputValues = createComputationBuffer(weights);
-        return feedForward(outputValues, input);
-    }
+    final private Layer[] layer;
 
-    // Feed forward computation
-    private double[] feedForward(final double[][] outputValues, double... input) {
-        System.arraycopy(input, 0, outputValues[0], 0, input.length);
-        for (int l = 0; l < weights.length; l++) {
-            crossMultiply(outputValues[l+1], weights[l], outputValues[l]);
-            vectorAdd(outputValues[l+1], outputValues[l+1], bias[l]);
-            activate(outputValues[l+1], activationFn);
-        }
-        return outputValues[weights.length];
-    }
-
-    /**
-     * Trains the network using batch back-propagation
-     */
-    public void train(final double[][] input, final double[][] expected) {
-        double[][]   outputValues  = createComputationBuffer(weights);
-        double[][]   errorValues   = createComputationBuffer(weights);
-        double[][][] deltaWeights  = zerosFrom(weights);
-        double[][]   deltaBias     = zerosFrom(bias);
-        for (int ep = 0; ep < epochs; ep++) {
-            double totalSumSquareError = doBatchBackProp(outputValues, errorValues,
-                                                         deltaWeights, deltaBias,
-                                                         input, expected);
-            updateWeightsAndBias(deltaWeights, deltaBias);
-            if (ep % 1000 == 0) {
-                logger.info("\t{}\t{}", ep, totalSumSquareError);
-            }
-        }
-    }
-
-    public void train(final MnistData trainingData) {
-        double[][]   outputValues  = createComputationBuffer(weights);
-        double[][]   errorValues   = createComputationBuffer(weights);
-        double[][][] deltaWeights  = zerosFrom(weights);
-        double[][]   deltaBias     = zerosFrom(bias);
-        for (int ep = 0; ep < epochs; ep++) {
-            double totalSumSquareError = doBatchBackProp(outputValues, errorValues,
-                    deltaWeights, deltaBias,
-                    trainingData);
-            updateWeightsAndBias(deltaWeights, deltaBias);
-            logger.info("\t{}\t{}", ep, totalSumSquareError);
-        }
-    }
-
-    // Performs one batch of back propagation
-    private double doBatchBackProp(double[][]   outputValues,
-                                 double[][]   errorValues,
-                                 double[][][] deltaWeights,
-                                 double[][]   deltaBias,
-                                 double[][]   input,
-                                 double[][]   expected) {
-        double totalSumSquareError = 0.0;
-        for (int n = 0; n < input.length; n++) {
-            feedForward(outputValues, input[n]);
-            totalSumSquareError += computeNodeErrors(errorValues, outputValues, expected[n]);
-            computeDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
-        }
-        return totalSumSquareError;
-    }
-
-    // Performs one batch of back propagation
-    private double doBatchBackProp(double[][]   outputValues,
-                                   double[][]   errorValues,
-                                   double[][][] deltaWeights,
-                                   double[][]   deltaBias,
-                                   MnistData mnistData) {
-        double totalSumSquareError = 0.0;
-        for (int n = 0; n < mnistData.numberOfItems(); n++) {
-            feedForward(outputValues, mnistData.input(n));
-            totalSumSquareError += computeNodeErrors(errorValues, outputValues, mnistData.output(n));
-            computeDeltaWeightsAndBias(deltaWeights, deltaBias, outputValues, errorValues);
-        }
-        return totalSumSquareError;
-    }
-
-    private double computeNodeErrors(double[][] errorValues, double[][] outputValues, double[] expected) {
-        int layers = errorValues.length;
-        double sumSquareError = 0.0;
-        // compute cost at the output layer
-        double[] output = outputValues[layers - 1];
-        for (int j = 0; j < output.length; j++) {
-            double delta = expected[j] - output[j];
-            errorValues[layers-1][j] = delta * activationFn.derivative(output[j]);
-            sumSquareError += delta * delta;
-        }
-        // compute error at hidden layers
-        for (int currentLayer = layers-1; currentLayer > 1; currentLayer--) {
-            int previousLayer = currentLayer - 1;
-            double[] hidden = outputValues[previousLayer];
-            for (int i = 0; i < errorValues[previousLayer].length; i++) {
-                double delta = 0.0;
-                for (int j = 0; j < errorValues[currentLayer].length; j++) {
-                    delta += weights[previousLayer][j][i] * errorValues[currentLayer][j];
-                }
-                errorValues[previousLayer][i] = delta * activationFn.derivative(hidden[i]);
-            }
-        }
-        return sumSquareError;
-    }
-
-    private void computeDeltaWeightsAndBias(double[][][] deltaWeights,
-                                            double[][]   deltaBias,
-                                            double[][]   outputValues,
-                                            double[][]   errorValues) {
-        int layers = errorValues.length;
-        for (int currentLayer = layers-1; currentLayer > 0; currentLayer--) {
-            int previousLayer = currentLayer - 1;
-            for (int j = 0; j < errorValues[currentLayer].length; j++) {
-                deltaBias[previousLayer][j] +=
-                        learningRate * errorValues[currentLayer][j];
-                for (int i = 0; i < errorValues[previousLayer].length; i++) {
-                    deltaWeights[previousLayer][j][i] +=
-                            learningRate * errorValues[currentLayer][j] * outputValues[previousLayer][i];
-                }
-            }
-        }
-    }
-
-    private void updateWeightsAndBias(double[][][] deltaWeights, double[][] deltaBias) {
-        for (int k = 0; k < weights.length; k++) {
-            for (int j = 0; j < weights[k].length; j++) {
-                for (int i = 0; i < weights[k][j].length; i++) {
-                    weights[k][j][i] += deltaWeights[k][j][i];
-                    deltaWeights[k][j][i] = 0.0;
-                }
-                bias[k][j] += deltaBias[k][j];
-                deltaBias[k][j] = 0.0;
-            }
+    private MLP(final ActivationFn activationFn, final int[] nodesPerLayer) {
+        final int numLayers = nodesPerLayer.length - 1;
+        layer = new Layer[numLayers];
+        for (int l = 0; l < numLayers; l++) {
+            layer[l] = new Layer(activationFn, nodesPerLayer[l], nodesPerLayer[l + 1]);
         }
     }
 
     // Initialize network weights from input array
-    private void initializeWeights(double[] rawWeights, int... nodesPerLayer) {
-        final int numLayers = nodesPerLayer.length - 1;
-        weights = new double[numLayers][][];
-        bias = new double[numLayers][];
+    private void setWeightsAndBiases(double[] rawWeights) {
         int start = 0;
-        for (int l = 0; l < nodesPerLayer.length - 1; l++) {
-            int rows = nodesPerLayer[l + 1];
-            int cols = nodesPerLayer[l];
-            weights[l] = new double[rows][];
-            bias[l] = new double[cols];
-            for (int j = 0; j < rows; j++) {
-                bias[l][j] = rawWeights[start++];
-                weights[l][j] = Arrays.copyOfRange(rawWeights, start, start + cols);
-                start += cols;
-            }
+        for (int l = 0; l < layer.length; l++) {
+            start = layer[l].setWeightsAndBiases(start, rawWeights);
         }
     }
 
-    //  Initialize network weights with random values
-    private void initializeWeights(int... nodesPerLayer) {
-        final int numLayers = nodesPerLayer.length - 1;
-        weights = new double[numLayers][][];
-        bias = new double[numLayers][];
-        for (int l = 0; l < nodesPerLayer.length - 1; l++) {
-            int rows = nodesPerLayer[l + 1];
-            int cols = nodesPerLayer[l];
-            weights[l] = new double[rows][];
-            bias[l] = new double[rows];
-            for (int j = 0; j < rows; j++) {
-                bias[l][j] = Math.random();
-                weights[l][j] = new double[cols];
-                for (int i = 0; i < cols; i++) {
-                    weights[l][j][i] = Math.random();
-                }
-            }
+    private void initializeComputationBuffers() {
+        for (int l = 0; l < layer.length; l++) {
+            layer[l].initializeComputationBuffers();
         }
     }
 
-    // Creates output values of each neuron to avoid multiple calls to new
-    private double[][] createComputationBuffer(double[][][] weights) {
-        final int layers = weights.length;
-        double[][] outputValues = new double[layers+1][];
-        outputValues[0] = new double[weights[0][0].length];
-        for (int l = 0; l < layers; l++) {
-            outputValues[l+1] = new double[weights[l].length];
+
+    /**
+     * Feed forward computation
+     */
+    public double[] feedForward(double... input) {
+        double[] layerOutput = input;
+        for (int l = 0; l < layer.length; l++) {
+            layerOutput = layer[l].feedForward(layerOutput);
         }
-        return outputValues;
+        return layerOutput;
+    }
+
+    public void train(final TrainingData trainingData) {
+        for (int epoch = 0; epoch < epochs; epoch++) {
+            double cost = doBatchBackProp(trainingData);
+            reporter.accept(epoch, cost);
+        }
+    }
+
+    private double doBatchBackProp(final TrainingData trainingData) {
+        double totalCost = 0.0;
+        for (int n = 0; n < trainingData.length(); n++) {
+            double[] output = feedForward(trainingData.input(n));
+            totalCost += computeCost(trainingData.output(n), output);
+            computeDeltaWeightsAndBias(trainingData.output(n), output, trainingData.input(n));
+        }
+        updateTotalWeightsAndBias();
+        return totalCost / trainingData.length();
+    }
+
+    private double computeCost(double[] expected, double[] output) {
+        double cost = 0;
+        for (int j = 0; j < expected.length; j++) {
+            cost += -expected[j] * Math.log(output[j])
+                    - (1.0-expected[j]) * Math.log(1.0 - output[j]);
+        }
+        return cost;
+    }
+
+    private void computeDeltaWeightsAndBias(double[] expected, double[] output, double[] input) {
+        layer[layer.length-1].computeErrorAtOutputLayer(expected, output);
+        for (int l = layer.length-1; l > 0; l--) {
+            final Layer currentLayer = layer[l];
+            final Layer previousLayer = layer[l-1];
+            previousLayer.propagateErrors(currentLayer);
+            currentLayer.computeDeltaWeightsAndBias(previousLayer.output, learningRate);
+        }
+        layer[0].computeDeltaWeightsAndBias(input, learningRate);
+    }
+
+    private void updateTotalWeightsAndBias() {
+        for (int l = 0; l < layer.length; l++) {
+            layer[l].updateTotalWeightsAndBias();
+        }
     }
 
     public void displayWeightsAndBias(final String text) {
         logger.info(text);
-        for (int l = 0; l < weights.length; l++) {
+        for (int l = 0; l < layer.length; l++) {
             logger.info("Layer " + (l+1));
-            for (int j = 0; j < weights[l].length; j++) {
-                final StringBuilder builder = new StringBuilder();
-                builder.append("  ")
-                        .append(bias[l][j]);
-                for (int i = 0; i < weights[l][j].length; i++) {
-                    builder.append("  ")
-                            .append(weights[l][j][i]);
-                }
-                logger.info(builder.toString());
-            }
+            layer[l].displayWeightsAndBias();
         }
     }
 
     public void save(String filename) throws IOException {
-        File file = new File(filename);
+        final File file = new File(filename);
         try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             out.writeObject(this);
             out.flush();
@@ -241,23 +119,26 @@ public class MLP implements Serializable {
      * Collects configuration info, then builds a MLP.
      */
     public static class Builder {
-        private ActivationFn activationFn = null;
-        private int[] nodesPerLayer = null;
-        private double[] rawWeights = null;
-        private double learningRate = 0.01;
-        private int epochs = 1000;
+        transient private ActivationFn activationFn = null;
+        transient private int[] nodesPerLayer = null;
+        transient private double[] rawWeights = null;
+        transient private double learningRate = 0.01;
+        transient private int epochs = 1000;
+        transient private BiConsumer<Integer, Double> reporter = (epoch, cost) -> {
+            if (epoch % 1000 == 0) {
+                logger.info("\t{}\t{}", epoch, cost);
+            }
+        };
 
         public MLP build() {
             final MLP mlp;
-            mlp = new MLP();
-            mlp.activationFn = activationFn;
+            mlp = new MLP(activationFn, nodesPerLayer);
             mlp.learningRate = learningRate;
             mlp.epochs = epochs;
+            mlp.reporter = reporter;
+            mlp.initializeComputationBuffers();
             if (rawWeights != null) {
-                mlp.initializeWeights(rawWeights, nodesPerLayer);
-            }
-            else {
-                mlp.initializeWeights(nodesPerLayer);
+                mlp.setWeightsAndBiases(rawWeights);
             }
             return mlp;
         }
@@ -286,11 +167,16 @@ public class MLP implements Serializable {
             this.epochs = epochs;
             return this;
         }
+        public Builder reporter(BiConsumer<Integer, Double> reporter) {
+            this.reporter = reporter;
+            return this;
+        }
 
         public MLP build(String filename) throws Exception {
             try (ObjectInputStream stream
                          = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
                 final MLP mlp = (MLP)stream.readObject();
+                mlp.initializeComputationBuffers();
                 return mlp;
             }
         }

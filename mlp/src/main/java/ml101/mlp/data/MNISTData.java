@@ -1,15 +1,15 @@
-package ml101.mlp.mnist;
+package ml101.mlp.data;
 
 import java.io.*;
 
-public class MnistData {
-    private final int numberOfItems;
+public class MNISTData implements TrainingData {
+    private final int length;
     private final int rows;
     private final int cols;
     private final double[][] input;
     private final double[][] output;
 
-    public MnistData(final String imageFileName, final String labelFileName) {
+    public MNISTData(final String imageFileName, final String labelFileName) {
         try ( DataInputStream images = new DataInputStream(new FileInputStream(imageFileName));
               DataInputStream labels = new DataInputStream(new FileInputStream(labelFileName)) ) {
             if (images.readInt() != 2051) {
@@ -18,19 +18,19 @@ public class MnistData {
             if (labels.readInt() != 2049) {
                 throw new IllegalArgumentException("Invalid labels file" + labelFileName);
             }
-            numberOfItems = labels.readInt();
-            if (images.readInt() != numberOfItems) {
+            length = labels.readInt();
+            if (images.readInt() != length) {
                 throw new IllegalArgumentException("Number of items does not match");
             }
 
             // initialize input and output
-            input = new double[numberOfItems][];
-            output = new double[numberOfItems][];
+            input = new double[length][];
+            output = new double[length][];
 
             // read labels
-            byte[] labelData = new byte[numberOfItems];
+            byte[] labelData = new byte[length];
             labels.read(labelData);
-            for (int j = 0; j < numberOfItems; j++) {
+            for (int j = 0; j < length; j++) {
                 output[j] = new double[10];
                 for (int i = 0; i < 10; i++) {
                     if (labelData[j] == i) {
@@ -46,7 +46,7 @@ public class MnistData {
             rows = images.readInt();
             cols = images.readInt();
             int imageSize = rows * cols;
-            for (int i = 0; i < numberOfItems; i++) {
+            for (int i = 0; i < length; i++) {
                 byte[] imageData = new byte[imageSize];
                 input[i] = new double[imageSize];
                 images.read(imageData);
@@ -61,8 +61,8 @@ public class MnistData {
         }
     }
 
-    public int numberOfItems() {
-        return numberOfItems;
+    public int length() {
+        return length;
     }
 
     public double[] input(final int i) {
