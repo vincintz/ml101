@@ -5,7 +5,7 @@
 ## Recall
 * Multilayer Perceptron (MLP)
 * Forward Computation
-* Training: Backpropagation
+- Training: Backpropagation
 
 +++
 ### Multilayer Perceptron (MLP)
@@ -15,8 +15,17 @@
 +++
 ### Multilayer Perceptron (MLP)
 
+Terms
+* neuron/node
+* layer
+* weight and bias
+
+
++++
+### Multilayer Perceptron (MLP)
+
 #### Conventions
-* we use the following indeces
+* we use the following indexes
   * _l_ : for layer
   * _j_ : node in current layer / output node
   * _i_ : node in previous layer / input node
@@ -75,7 +84,7 @@ class Layer:
 
 * Gradient is the slope of the line that 'touches' the graph at a certain point
 
-![cost = sumSquare(expected - output)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient3.png)
+![cost = sumSquare(expected - output)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/a  ssets/gradient3.png)
 
 ---
 ## Back Propagation
