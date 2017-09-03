@@ -20,6 +20,9 @@ public class MLP implements Serializable {
 
     final private Layer[] layer;
 
+    /**
+     * MLP Constructor
+     */
     private MLP(final ActivationFn activationFn, final int[] nodesPerLayer) {
         final int numLayers = nodesPerLayer.length - 1;
         layer = new Layer[numLayers];
@@ -28,7 +31,10 @@ public class MLP implements Serializable {
         }
     }
 
-    // Initialize network weights from input array
+    /*
+     * Demo method for manually setting weights and biases. Useful for testing manually selecting weights and biases
+     * for an XOR mlp.
+     */
     private void setWeightsAndBiases(double[] rawWeights) {
         int start = 0;
         for (int l = 0; l < layer.length; l++) {
@@ -36,6 +42,9 @@ public class MLP implements Serializable {
         }
     }
 
+    /*
+     * Initializes computation buffers. These arrays are used to avoid multiple calls to 'new'.
+     */
     private void initializeComputationBuffers() {
         for (int l = 0; l < layer.length; l++) {
             layer[l].initializeComputationBuffers();
@@ -54,6 +63,9 @@ public class MLP implements Serializable {
         return layerOutput;
     }
 
+    /**
+     * Train using batch back propagation
+     */
     public void train(final TrainingData trainingData) {
         for (int epoch = 0; epoch < epochs; epoch++) {
             double cost = doBatchBackProp(trainingData);
@@ -61,6 +73,9 @@ public class MLP implements Serializable {
         }
     }
 
+    /**
+     * One back-propagation epoch.
+     */
     private double doBatchBackProp(final TrainingData trainingData) {
         double totalCost = 0.0;
         for (int n = 0; n < trainingData.length(); n++) {
@@ -72,6 +87,9 @@ public class MLP implements Serializable {
         return totalCost / trainingData.length();
     }
 
+    /**
+     * @return Returns the 'cost' at the output layer
+     */
     private double computeCost(double[] expected, double[] output) {
         double cost = 0;
         for (int j = 0; j < expected.length; j++) {
@@ -81,6 +99,9 @@ public class MLP implements Serializable {
         return cost;
     }
 
+    /**
+     * Computes the change in weights and biases, starting at the output layer, going backwards.
+     */
     private void computeDeltaWeightsAndBias(double[] expected, double[] output, double[] input) {
         layer[layer.length-1].computeErrorAtOutputLayer(expected, output);
         for (int l = layer.length-1; l > 0; l--) {
@@ -92,12 +113,19 @@ public class MLP implements Serializable {
         layer[0].computeDeltaWeightsAndBias(input, learningRate);
     }
 
+    /**
+     * Updates the network weigts and biases
+     */
     private void updateTotalWeightsAndBias() {
         for (int l = 0; l < layer.length; l++) {
             layer[l].updateTotalWeightsAndBias();
         }
     }
 
+    /**
+     * Helper function for displaying the weights
+     * @param text
+     */
     public void displayWeightsAndBias(final String text) {
         logger.info(text);
         for (int l = 0; l < layer.length; l++) {
@@ -106,6 +134,9 @@ public class MLP implements Serializable {
         }
     }
 
+    /**
+     * Save the network in a file
+     */
     public void save(String filename) throws IOException {
         final File file = new File(filename);
         try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {

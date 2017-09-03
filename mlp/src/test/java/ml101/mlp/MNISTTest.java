@@ -4,13 +4,10 @@ import ml101.mlp.activation.LogisticFn;
 import ml101.mlp.data.MNISTData;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 
 public class MNISTTest {
-    transient private final static Logger logger = LoggerFactory.getLogger(MNISTTest.class);
     private MNISTData trainingData;
     private MNISTData testData;
 
@@ -36,10 +33,9 @@ public class MNISTTest {
                 .layers(28*28, 1200, 10)
                 .activation(new LogisticFn())
                 .iterations(500000)
-                .reporter((epoch, cost) -> {
-                    logger.info("\t{}\t{}", epoch, cost);
-                })
+                .reporter((epoch, cost) -> System.out.println(epoch + "\t" + cost))
                 .build();
+        System.out.println("epoch\tcost");
         mlp.train(trainingData);
         mlp.save("mnist1200.mlp");
     }

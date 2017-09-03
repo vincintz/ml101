@@ -66,6 +66,9 @@ public class Layer implements Serializable {
         return start;
     }
 
+    /*
+     * Initializes computation buffers. These arrays are used to avoid multiple calls to 'new'.
+     */
     void initializeComputationBuffers() {
         int numOutputs = weights.length;
         int numInputs = weights[0].length;
