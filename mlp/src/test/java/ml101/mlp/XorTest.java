@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class MLPTest {
+public class XorTest {
     private final double DELTA = 0.5;
 
     @Test
