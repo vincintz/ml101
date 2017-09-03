@@ -18,16 +18,15 @@ public class MLP implements Serializable {
     transient private int epochs;
     transient private BiConsumer<Integer, Double> reporter;
 
-    final private Layer[] layer;
+    final private Layer[] layers;
 
     /**
      * MLP Constructor
      */
     private MLP(final ActivationFn activationFn, final int[] nodesPerLayer) {
-        final int numLayers = nodesPerLayer.length - 1;
-        layer = new Layer[numLayers];
-        for (int l = 0; l < numLayers; l++) {
-            layer[l] = new Layer(activationFn, nodesPerLayer[l], nodesPerLayer[l + 1]);
+        layers = new Layer[nodesPerLayer.length - 1];
+        for (int l = 0; l < layers.length; l++) {
+            layers[l] = new Layer(activationFn, nodesPerLayer[l], nodesPerLayer[l + 1]);
         }
     }
 
@@ -37,8 +36,8 @@ public class MLP implements Serializable {
      */
     private void setWeightsAndBiases(double[] rawWeights) {
         int start = 0;
-        for (int l = 0; l < layer.length; l++) {
-            start = layer[l].setWeightsAndBiases(start, rawWeights);
+        for (int l = 0; l < layers.length; l++) {
+            start = layers[l].setWeightsAndBiases(start, rawWeights);
         }
     }
 
@@ -46,8 +45,8 @@ public class MLP implements Serializable {
      * Initializes computation buffers. These arrays are used to avoid multiple calls to 'new'.
      */
     private void initializeComputationBuffers() {
-        for (int l = 0; l < layer.length; l++) {
-            layer[l].initializeComputationBuffers();
+        for (int l = 0; l < layers.length; l++) {
+            layers[l].initializeComputationBuffers();
         }
     }
 
@@ -57,8 +56,8 @@ public class MLP implements Serializable {
      */
     public double[] feedForward(double... input) {
         double[] layerOutput = input;
-        for (int l = 0; l < layer.length; l++) {
-            layerOutput = layer[l].feedForward(layerOutput);
+        for (int l = 0; l < layers.length; l++) {
+            layerOutput = layers[l].feedForward(layerOutput);
         }
         return layerOutput;
     }
@@ -68,27 +67,20 @@ public class MLP implements Serializable {
      */
     public void train(final TrainingData trainingData) {
         for (int epoch = 0; epoch < epochs; epoch++) {
-            double cost = doBatchBackProp(trainingData);
-            reporter.accept(epoch, cost);
+            double totalCost = 0.0;
+            for (int n = 0; n < trainingData.length(); n++) {
+                double[] output = feedForward(trainingData.input(n));
+                totalCost += computeCost(trainingData.output(n), output);
+                computeDeltaWeightsAndBias(trainingData.output(n), output, trainingData.input(n));
+            }
+            updateTotalWeightsAndBias();
+            // use reporter lambda (BiConsumer) to display current status
+            reporter.accept(epoch, totalCost / trainingData.length());
         }
     }
 
     /**
-     * One back-propagation epoch.
-     */
-    private double doBatchBackProp(final TrainingData trainingData) {
-        double totalCost = 0.0;
-        for (int n = 0; n < trainingData.length(); n++) {
-            double[] output = feedForward(trainingData.input(n));
-            totalCost += computeCost(trainingData.output(n), output);
-            computeDeltaWeightsAndBias(trainingData.output(n), output, trainingData.input(n));
-        }
-        updateTotalWeightsAndBias();
-        return totalCost / trainingData.length();
-    }
-
-    /**
-     * @return Returns the 'cost' at the output layer
+     * @return Returns the 'cost' at the output layers
      */
     private double computeCost(double[] expected, double[] output) {
         double cost = 0;
@@ -100,25 +92,25 @@ public class MLP implements Serializable {
     }
 
     /**
-     * Computes the change in weights and biases, starting at the output layer, going backwards.
+     * Computes the change in weights and biases, starting at the output layers, going backwards.
      */
     private void computeDeltaWeightsAndBias(double[] expected, double[] output, double[] input) {
-        layer[layer.length-1].computeErrorAtOutputLayer(expected, output);
-        for (int l = layer.length-1; l > 0; l--) {
-            final Layer currentLayer = layer[l];
-            final Layer previousLayer = layer[l-1];
+        layers[layers.length-1].computeErrorAtOutputLayer(expected, output);
+        for (int l = layers.length-1; l > 0; l--) {
+            final Layer currentLayer = layers[l];
+            final Layer previousLayer = layers[l-1];
             previousLayer.propagateErrors(currentLayer);
             currentLayer.computeDeltaWeightsAndBias(previousLayer.output, learningRate);
         }
-        layer[0].computeDeltaWeightsAndBias(input, learningRate);
+        layers[0].computeDeltaWeightsAndBias(input, learningRate);
     }
 
     /**
      * Updates the network weigts and biases
      */
     private void updateTotalWeightsAndBias() {
-        for (int l = 0; l < layer.length; l++) {
-            layer[l].updateTotalWeightsAndBias();
+        for (int l = 0; l < layers.length; l++) {
+            layers[l].updateTotalWeightsAndBias();
         }
     }
 
@@ -128,9 +120,9 @@ public class MLP implements Serializable {
      */
     public void displayWeightsAndBias(final String text) {
         logger.info(text);
-        for (int l = 0; l < layer.length; l++) {
+        for (int l = 0; l < layers.length; l++) {
             logger.info("Layer " + (l+1));
-            layer[l].displayWeightsAndBias();
+            layers[l].displayWeightsAndBias();
         }
     }
 
