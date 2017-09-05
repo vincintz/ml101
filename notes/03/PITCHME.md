@@ -164,5 +164,27 @@ private void computeDeltaWeightsAndBias(
 ```
 
 ---
+## Back Propagation
+
+### When to update weights
+* Batch
+* Stochastic
+* Hybrid
+* Realtime / Online (very new!)
+
+---
+### Next Step
+
+* Fixed bugs
+  * sometimes used f(net) instead of net
+  * indexing mistakes?
+
+* Use Numerical Method library (for matrix operations)
+
+* MNIST dataset
+  * Try using stochastic back-propagation
+  * Try using less data
+
+---
 ### References
 * https://en.wikipedia.org/wiki/Backpropagation
