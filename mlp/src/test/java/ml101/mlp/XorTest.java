@@ -9,12 +9,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class XorTest {
-    private final double DELTA = 0.5;
+    private final double DELTA = 0.1;
 
     @Test
     public void shouldWorkWithManuallyConfiguredXOR() {
         final MLP mlp = new MLP.Builder()
-                .activation(new LogisticFn(5.0))
+                .activation(new StepFn())
                 .layers(2, 2, 1)
                 .weights( -0.5,  1.0,  1.0,
                            1.5, -1.0, -1.0,
@@ -32,7 +32,7 @@ public class XorTest {
         final MLP mlp = new MLP.Builder()
                 .activation(new LogisticFn(1.0))
                 .layers(2, 2, 1)
-                .learningRate(0.05)
+                .learningRate(0.1)
                 .iterations(500000)
                 .build();
         mlp.displayWeightsAndBias("Before Training");
@@ -46,6 +46,10 @@ public class XorTest {
                                 {1.0},
                                 {0.0}}));
         mlp.displayWeightsAndBias("After Training");
+        System.out.println(mlp.feedForward(0.0, 0.0)[0]);
+        System.out.println(mlp.feedForward(0.0, 1.0)[0]);
+        System.out.println(mlp.feedForward(1.0, 0.0)[0]);
+        System.out.println(mlp.feedForward(1.0, 1.0)[0]);
         assertEquals(0.0, mlp.feedForward(0.0, 0.0)[0], DELTA);
         assertEquals(1.0, mlp.feedForward(0.0, 1.0)[0], DELTA);
         assertEquals(1.0, mlp.feedForward(1.0, 0.0)[0], DELTA);

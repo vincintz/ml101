@@ -15,8 +15,8 @@ public class LogisticFn implements ActivationFn, Serializable {
     }
 
     @Override
-    public double derivative(double z) {
-        double fz = compute(z);
+    public double derivative(double fz) {
+        //double fz = compute(z);
         return fz * (1.0 - fz);
     }
 }
