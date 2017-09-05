@@ -76,13 +76,14 @@ class Layer:
 ## Gradient Descent
 
 * Cost function
-$ Cost = \frac 12 (t_j - y_j)^2 $
+
+$$ Cost = \frac 12 (t_j - y_j)^2 $$
 
 * For the derivation, we treat bias as a normal weight with input = 1
 
 * Change in weight
 
-$ \Delta w_{ji} = -\alpha * \frac {\delta Cost}{\delta w_{ji}} $
+$$ \Delta w_{ji} = -\alpha * \frac {\delta Cost}{\delta w_{ji}} $$
 
 ---
 ### Gradient Intuition
@@ -111,14 +112,20 @@ $ \Delta w_{ji} = -\alpha * \frac {\delta Cost}{\delta w_{ji}} $
 +++
 * When the slope zero, gradient is horizontal
 
-![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient2.png)
+![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient1.png)
 
 ---
 ### Compute Change in Weight
 
 * Output Layer
 
+$$\frac {\delta E}{\delta w_{ji}} = (y_j-t_j) * fn'(net_j) * input_i$$
+
 * Hidden Layers
+
+$$ \frac {\delta E}{\delta w_{ji}} = (\sum_{l \epsilon L} err_j*w_{ji}) * fn'(net_j) * input_i $$
+
+* https://en.wikipedia.org/wiki/Backpropagation
 
 ---
 ## Back Propagation
@@ -163,6 +170,4 @@ private void computeDeltaWeightsAndBias(
 
 ---
 ### References
-* https://en.wikipedia.org/wiki/Multilayer_perceptron
-* http://neuralnetworksanddeeplearning.com/chap2.html
-* http://www.cse.unsw.edu.au/~cs9417ml/MLP2/
+* https://en.wikipedia.org/wiki/Backpropagation
