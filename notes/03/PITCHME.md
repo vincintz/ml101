@@ -69,20 +69,15 @@ class Layer:
 
 * Run forward computation
 * Compute cost at the output layer
-  * ![cost = sumSquare(expected - output)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/cost.png)
 * Update the weights and bias such that a certain error function is minimized
 
 ---
 ## Gradient Descent
 
 * Cost function
-
 $$ Cost = \frac 12 (t_j - y_j)^2 $$
-
 * For the derivation, we treat bias as a normal weight with input = 1
-
 * Change in weight
-
 $$ \Delta w_{ji} = -\alpha * \frac {\delta Cost}{\delta w_{ji}} $$
 
 ---
