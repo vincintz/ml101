@@ -26,18 +26,6 @@
 #### Multi-layer Perceptron
 ![Neuron](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/recall-mlp.png)
 
-+++
-### Multilayer Perceptron (MLP)
-
-#### Conventions
-* we use the following indexes
-  * _l_ : for layer
-  * _j_ : node in current layer / output node
-  * _i_ : node in previous layer / input node
-* each layer has:
-  * biases\[j\]
-  * weights\[j\]\[i\]
-
 ---
 ### Forward Computation
 ![Picture of MLP](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/xor-mlp.png)
@@ -76,8 +64,10 @@ class Layer:
 
 ![Gradient)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradientdescent.png)
 
-* Change in weigh is based on the gradient
-* Cost function is not so simple
+* Compute cost at the output layer
+* Change in weigh is based on the cost gradient
+  * derivative of cost wrt weight
+* Cost function is not simple
 * We need a simple way to compute the gradient
 
 +++
