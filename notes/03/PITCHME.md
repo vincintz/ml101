@@ -69,8 +69,6 @@ class Layer:
   * derivative of cost wrt weight
 * We need a simple way to compute the gradient
 
-+++
-
 ---
 ### Gradient Intuition
 
