@@ -74,11 +74,7 @@ class Layer:
 ---
 ## Gradient Descent
 
-* Cost function
-  $$ Cost = \frac 12 (t_j - y_j)^2 $$
-* For the derivation, we treat bias as a normal weight with input = 1
-* Change in weight
-  $$ \Delta w_{ji} = -\alpha * \frac {\delta Cost}{\delta w_{ji}} $$
+![Gradient)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradientdescent.png)
 
 ---
 ### Gradient Intuition
@@ -105,20 +101,28 @@ class Layer:
 +++
 * When the slope zero, gradient is horizontal
 
-![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient1.png)
+![Gradient](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradient4.png)
 
 ---
 ### Compute Change in Weight
 
-* Output Layer
-  $$\frac {\delta E}{\delta w_{ji}} = (y_j-t_j) * fn'(net_j) * input_i$$
-* Hidden Layers
-  $$ \frac {\delta E}{\delta w_{ji}} = (\sum_{l \epsilon L} err_j*w_{ji}) * fn'(net_j) * input_i $$
+![Computation](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/compute-deltaw.png)
 
 * https://en.wikipedia.org/wiki/Backpropagation
 
 ---
 ## Back Propagation
+
+![Neuron](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/recall-mlp.png)
+
+* At the output layer 
+  * Compute error term at the output layer - $(y_j - t_j)$
+  * Compute delta weights and delta bias
+* For each hidden layer (going backards)
+  * Propagate the error from the next layer
+  * Compute delta weights and delta bias
+
++++
 ```
 public void train(final TrainingData trainingData) {
   for (int epoch = 0; epoch < epochs; epoch++) {
