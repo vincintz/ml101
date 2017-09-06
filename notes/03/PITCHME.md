@@ -76,6 +76,12 @@ class Layer:
 
 ![Gradient)](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/gradientdescent.png)
 
+* Change in weigh is based on the gradient
+* Cost function is not so simple
+* We need a simple way to compute the gradient
+
++++
+
 ---
 ### Gradient Intuition
 
@@ -114,6 +120,9 @@ class Layer:
 ## Back Propagation
 
 ![Neuron](https://raw.githubusercontent.com/vincintz/ml101/master/notes/assets/recall-mlp.png)
+
++++
+## Back Propagation
 
 * At the output layer 
   * Compute error term at the output layer - $(y_j - t_j)$
