@@ -67,7 +67,6 @@ class Layer:
 * Compute cost at the output layer
 * Change in weigh is based on the cost gradient
   * derivative of cost wrt weight
-* Cost function is not simple
 * We need a simple way to compute the gradient
 
 +++
