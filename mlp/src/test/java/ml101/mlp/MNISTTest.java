@@ -32,10 +32,9 @@ public class MNISTTest {
         final MLP mlp = new MLP.Builder()
                 .layers(28*28, 1200, 10)
                 .activation(new LogisticFn(2.0))
-                .iterations(500000)
-                .reporter((epoch, cost) -> System.out.println(epoch + "\t" + cost))
-                .build();
-        System.out.println("epoch\tcost");
+                .stopWhen((iteration, cost) -> iteration >= 1000 || cost < 0.1)
+                .reportStatus((iteration, cost) -> System.out.println(iteration + "\t" + cost))
+                .load();
         mlp.train(trainingData);
         mlp.save("mnist1200.mlp");
     }

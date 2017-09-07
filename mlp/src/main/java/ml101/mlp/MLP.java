@@ -4,6 +4,7 @@ import ml101.mlp.activation.ActivationFn;
 
 import java.io.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 
 import ml101.mlp.data.TrainingData;
 import org.slf4j.Logger;
@@ -14,9 +15,9 @@ import org.slf4j.LoggerFactory;
  */
 public class MLP implements Serializable {
     transient private final static Logger logger = LoggerFactory.getLogger(MLP.class);
-    transient private double learningRate;
-    transient private int epochs;
-    transient private BiConsumer<Integer, Double> reporter;
+    private double learningRate;
+    transient private BiPredicate<Long, Double> stopCriteria;
+    transient private BiConsumer<Long, Double> reporter;
 
     final Layer[] layers;
 
@@ -66,17 +67,19 @@ public class MLP implements Serializable {
      * Train using batch back propagation
      */
     public void train(final TrainingData trainingData) {
-        for (int epoch = 0; epoch < epochs; epoch++) {
-            double totalCost = 0.0;
+        long iteration = 0;
+        double totalCost;
+        do {
+            totalCost = 0.0;
             for (int n = 0; n < trainingData.length(); n++) {
                 double[] output = feedForward(trainingData.input(n));
                 totalCost += computeCost(trainingData.output(n), output);
                 computeDeltaWeightsAndBias(trainingData.output(n), output, trainingData.input(n));
             }
             updateTotalWeightsAndBias();
-            // use reporter lambda (BiConsumer) to display current status
-            reporter.accept(epoch, totalCost / trainingData.length());
-        }
+            // use reportStatus lambda (BiConsumer) to display current status
+            reporter.accept(++iteration, totalCost / trainingData.length());
+        } while (!stopCriteria.test(iteration, totalCost));
     }
 
     /**
@@ -157,19 +160,19 @@ public class MLP implements Serializable {
         transient private int[] nodesPerLayer = null;
         transient private double[] rawWeights = null;
         transient private double learningRate = 0.01;
-        transient private int epochs = 1000;
-        transient private BiConsumer<Integer, Double> reporter = (epoch, cost) -> {
-            if (epoch % 1000 == 0) {
-                logger.info("\t{}\t{}", epoch, cost);
+        transient private BiPredicate<Long, Double> stopCriteria = (iteration, cost) -> iteration < 1000;
+        transient private BiConsumer<Long, Double> reporter = (iteration, cost) -> {
+            if (iteration % 1000 == 0) {
+                logger.info("\t{}\t{}", iteration, cost);
             }
         };
 
-        public MLP build() {
+        public MLP load() {
             final MLP mlp;
             mlp = new MLP(activationFn, nodesPerLayer);
             mlp.learningRate = learningRate;
-            mlp.epochs = epochs;
             mlp.reporter = reporter;
+            mlp.stopCriteria = stopCriteria;
             mlp.initializeComputationBuffers();
             if (rawWeights != null) {
                 mlp.setWeightsAndBiases(rawWeights);
@@ -197,16 +200,17 @@ public class MLP implements Serializable {
             return this;
         }
 
-        public Builder iterations(int epochs) {
-            this.epochs = epochs;
-            return this;
-        }
-        public Builder reporter(BiConsumer<Integer, Double> reporter) {
+        public Builder reportStatus(BiConsumer<Long, Double> reporter) {
             this.reporter = reporter;
             return this;
         }
 
-        public MLP build(String filename) throws Exception {
+        public Builder stopWhen(BiPredicate<Long, Double> stopCriteria) {
+            this.stopCriteria = stopCriteria;
+            return this;
+        }
+
+        public MLP load(String filename) throws Exception {
             try (ObjectInputStream stream
                          = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
                 final MLP mlp = (MLP)stream.readObject();

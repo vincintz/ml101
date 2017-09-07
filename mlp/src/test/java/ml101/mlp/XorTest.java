@@ -5,10 +5,13 @@ import ml101.mlp.activation.StepFn;
 import ml101.mlp.data.PlainData;
 import ml101.mlp.data.TrainingData;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
 public class XorTest {
+    private final static Logger logger = LoggerFactory.getLogger(XorTest.class);
     private final double DELTA = 0.1;
 
     @Test
@@ -19,7 +22,7 @@ public class XorTest {
                 .weights( -0.5,  1.0,  1.0,
                            1.5, -1.0, -1.0,
                           -1.5,  1.0,  1.0)
-                .build();
+                .load();
         mlp.displayWeightsAndBias("Manually Configured");
         assertEquals(0.0, mlp.feedForward(0.0, 0.0)[0], DELTA);
         assertEquals(1.0, mlp.feedForward(0.0, 1.0)[0], DELTA);
@@ -28,13 +31,18 @@ public class XorTest {
     }
 
     @Test
-    public void shouldWorkWithTrainedXOR() {
+    public void shouldWorkWithTrainedXOR() throws Exception {
         final MLP mlp = new MLP.Builder()
                 .activation(new LogisticFn(1.0))
                 .layers(2, 2, 1)
                 .learningRate(0.1)
-                .iterations(500000)
-                .build();
+                .reportStatus((iteration, cost) -> {
+                    if (iteration % 1000 == 0) {
+                        logger.info("\t{}\t{}", iteration, cost);
+                    }
+                })
+                .stopWhen((iteration, cost) -> iteration >= 500000 || cost < 0.005)
+                .load();
         mlp.displayWeightsAndBias("Before Training");
         mlp.train(new PlainData(
                 new double[][] {{0.0, 0.0},
@@ -46,10 +54,6 @@ public class XorTest {
                                 {1.0},
                                 {0.0}}));
         mlp.displayWeightsAndBias("After Training");
-        System.out.println(mlp.feedForward(0.0, 0.0)[0]);
-        System.out.println(mlp.feedForward(0.0, 1.0)[0]);
-        System.out.println(mlp.feedForward(1.0, 0.0)[0]);
-        System.out.println(mlp.feedForward(1.0, 1.0)[0]);
         assertEquals(0.0, mlp.feedForward(0.0, 0.0)[0], DELTA);
         assertEquals(1.0, mlp.feedForward(0.0, 1.0)[0], DELTA);
         assertEquals(1.0, mlp.feedForward(1.0, 0.0)[0], DELTA);
@@ -64,10 +68,9 @@ public class XorTest {
                 .weights( -0.5,  1.0,  1.0,
                         1.5, -1.0, -1.0,
                         -1.5,  1.0,  1.0)
-                .build();
+                .load();
         mlp.save("xor.mlp");
-        final MLP xorLoaded = new MLP.Builder()
-                .build("xor.mlp");
+        final MLP xorLoaded = new MLP.Builder().load("xor.mlp");
         xorLoaded.displayWeightsAndBias("Loaded from file");
         assertEquals(0.0, xorLoaded.feedForward(0.0, 0.0)[0], DELTA);
         assertEquals(1.0, xorLoaded.feedForward(0.0, 1.0)[0], DELTA);
@@ -75,7 +78,7 @@ public class XorTest {
         assertEquals(0.0, xorLoaded.feedForward(1.0, 1.0)[0], DELTA);
     }
 
-    @Test
+    // @ Test
     public void createDemoData() {
         final MLP mlp = new MLP.Builder()
                 .activation(new LogisticFn(5.0))
@@ -83,7 +86,7 @@ public class XorTest {
                 .weights( -0.5,  1.0,  1.0,
                         1.5, -1.0, -1.0,
                         -1.5,  1.0,  1.0)
-                .build();
+                .load();
         TrainingData td = new PlainData(
                 new double[][] {{0.0, 0.0},
                         {0.0, 1.0},
