@@ -1,15 +1,16 @@
 package ml101.mlp;
 
-import ml101.mlp.activation.LogisticFn;
-import ml101.mlp.data.MNISTData;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Assume;
+import static org.junit.Assert.assertEquals;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
+
+import ml101.mlp.activation.LogisticFn;
+import ml101.mlp.data.MNISTData;
 
 public class MNISTTest {
     private MNISTData trainingData;
