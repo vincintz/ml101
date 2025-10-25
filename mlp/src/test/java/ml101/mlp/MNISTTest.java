@@ -4,6 +4,10 @@ import ml101.mlp.activation.LogisticFn;
 import ml101.mlp.data.MNISTData;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assume;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,12 +17,19 @@ public class MNISTTest {
 
     @Before
     public void loadData() {
-        trainingData = new MNISTData(
-                "../data/mnist/train-images-idx3-ubyte",
-                "../data/mnist/train-labels-idx1-ubyte");
-        testData = new MNISTData(
-                "../data/mnist/t10k-images-idx3-ubyte",
-                "../data/mnist/t10k-labels-idx1-ubyte");
+    // If MNIST data isn't present in ../data/mnist, skip these tests.
+    boolean hasData = Files.exists(Paths.get("../data/mnist/train-images-idx3-ubyte"))
+        && Files.exists(Paths.get("../data/mnist/train-labels-idx1-ubyte"))
+        && Files.exists(Paths.get("../data/mnist/t10k-images-idx3-ubyte"))
+        && Files.exists(Paths.get("../data/mnist/t10k-labels-idx1-ubyte"));
+    Assume.assumeTrue("MNIST data not found in ../data/mnist — skipping MNIST tests", hasData);
+
+    trainingData = new MNISTData(
+        "../data/mnist/train-images-idx3-ubyte",
+        "../data/mnist/train-labels-idx1-ubyte");
+    testData = new MNISTData(
+        "../data/mnist/t10k-images-idx3-ubyte",
+        "../data/mnist/t10k-labels-idx1-ubyte");
     }
 
     @Test

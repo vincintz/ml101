@@ -3,12 +3,26 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
+// Use Gradle Java toolchain to request OpenJDK 25 for compilation when available.
+// This keeps the project source-level clear (Java 25) while allowing developers
+// to build with their system JDK if a toolchain installation isn't available.
+java {
+    toolchain {
+        // Request language version 25 (OpenJDK 25) when Gradle can provision it.
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+// Compile with `--release 25` to ensure the produced classfiles target Java 25
+// semantics (requires a matching JDK toolchain or compatible JDK on the host).
+tasks.withType(org.gradle.api.tasks.compile.JavaCompile) {
+    options.release = 25
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 }

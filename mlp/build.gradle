@@ -18,7 +18,7 @@ repositories {
 dependencies {
     // compile "org.nd4j:nd4j-api:${node4j_version}"
     // compile "org.nd4j:nd4j-native-platform:${node4j_version}"
-    compile "org.slf4j:slf4j-simple:${slf4j_version}"
-    compile "org.slf4j:slf4j-api:${slf4j_version}"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation "org.slf4j:slf4j-simple:${slf4j_version}"
+    implementation "org.slf4j:slf4j-api:${slf4j_version}"
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
